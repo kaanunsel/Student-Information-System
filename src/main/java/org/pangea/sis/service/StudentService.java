@@ -20,17 +20,28 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public Optional<Student> getStudentById(Long id){
-        return studentRepository.findById(id);
+    public List<Student> getStudentById(Long id){
+        return studentRepository.findById(id).stream().toList();
     }
 
-    public Optional<Student> getStudentsByName(String name){
-        return studentRepository.findAllByName(name);
+    public List<Student> getStudentsByName(String name){
+        return studentRepository.findAllByName(name).stream().toList();
     }
-    public Optional<Student> getStudentsBySurname(String surname){
-        return studentRepository.findAllBySurname(surname);
+
+    public List<Student> getStudentsBySurname(String surname){
+        return studentRepository.findAllBySurname(surname).stream().toList();
     }
-    public Optional<Student> getStudentsByEmail(String email){
-        return studentRepository.findAllByEmail(email);
+
+    public Student addStudent(Student student){
+        Optional<Student> addedStudent = studentRepository.findById(student.getId());
+        if(addedStudent.isPresent()){
+            return null;
+        }
+        return studentRepository.save(student);
     }
+
+    public void deleteStudent(Long id){
+        studentRepository.deleteById(id);
+    }
+
 }
