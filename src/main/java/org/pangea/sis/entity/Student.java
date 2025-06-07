@@ -1,5 +1,6 @@
 package org.pangea.sis.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class Student {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
+    @JsonIgnore
     private List<StudentCourse> enrollments = new ArrayList<>();
     public Student() {
     }
