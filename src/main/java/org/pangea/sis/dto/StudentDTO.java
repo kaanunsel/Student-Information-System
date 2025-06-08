@@ -32,35 +32,35 @@ public class StudentDTO {
         this.birthDate = birthDate;
     }
 
-    public String getName() {
+    public @NotBlank(message = "Name is required") String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NotBlank(message = "Name is required") String name) {
         this.name = name;
     }
 
-    public String getSurname() {
+    public @NotBlank(message = "Surname is required") String getSurname() {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public void setSurname(@NotBlank(message = "Surname is required") String surname) {
         this.surname = surname;
     }
 
-    public String getEmail() {
+    public @NotBlank(message = "Email is required") @Email(message = "Not a valid email") String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NotBlank(message = "Email is required") @Email(message = "Not a valid email") String email) {
         this.email = email;
     }
 
-    public LocalDate getBirthDate() {
+    public @NotNull(message = "Birth date is required") @Past(message = "Birth date must be in the past") LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(@NotNull(message = "Birth date is required") @Past(message = "Birth date must be in the past") LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 }
