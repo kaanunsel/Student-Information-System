@@ -49,6 +49,16 @@ public class StudentController {
         return new ResponseEntity<>(StudentMapper.toDto(savedStudent), HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<StudentDTO> updateStudent(
+        @PathVariable Long id,
+        @RequestBody @Valid StudentDTO dto
+    ) {
+    return studentService.updateStudent(id, StudentMapper.toEntity(dto))
+            .map(updatedStudent -> new ResponseEntity<>(StudentMapper.toDto(updatedStudent), HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable Long id){
         studentService.deleteStudent(id);

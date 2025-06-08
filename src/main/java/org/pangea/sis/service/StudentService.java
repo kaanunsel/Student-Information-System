@@ -43,4 +43,21 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
+    public Optional<Student> updateStudent(Long id, Student updatedStudent) {
+    Optional<Student> optionalStudent = studentRepository.findById(id);
+
+    if (optionalStudent.isPresent()) {
+        Student existingStudent = optionalStudent.get();
+        existingStudent.setName(updatedStudent.getName());
+        existingStudent.setSurname(updatedStudent.getSurname());
+        existingStudent.setEmail(updatedStudent.getEmail());
+        existingStudent.setBirthDate(updatedStudent.getBirthDate());
+
+        Student savedStudent = studentRepository.save(existingStudent);
+        return Optional.of(savedStudent);
+    } else {
+        return Optional.empty();
+    }
+}
+
 }
