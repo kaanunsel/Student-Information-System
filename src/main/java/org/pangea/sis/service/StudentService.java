@@ -4,6 +4,8 @@ import org.pangea.sis.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.pangea.sis.entity.Student;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +35,7 @@ public class StudentService {
     }
 
     public Student addStudent(Student student){
-        Optional<Student> addedStudent = studentRepository.findById(student.getId());
-        if(addedStudent.isPresent()){
-            return null;
-        }
+        student.setCreatedAt(LocalDateTime.now());
         return studentRepository.save(student);
     }
 

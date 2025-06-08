@@ -1,5 +1,8 @@
 package org.pangea.sis.controller;
 
+import jakarta.validation.Valid;
+import org.pangea.sis.dto.StudentDTO;
+import org.pangea.sis.dto.StudentMapper;
 import org.pangea.sis.entity.Student;
 import org.pangea.sis.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,29 +24,29 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getStudents(
+    public List<StudentDTO> getStudents(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String surname
     ){
         if (id != null) {
-        return studentService.getStudentById(id);
+        return studentService.getStudentById(id).stream().map(StudentMapper::toDto).toList();
         }
         else if (name != null) {
-            return studentService.getStudentsByName(name);
+            return studentService.getStudentsByName(name).stream().map(StudentMapper::toDto).toList();
         }
         else if (surname != null) {
-            return studentService.getStudentsBySurname(surname);
+            return studentService.getStudentsBySurname(surname).stream().map(StudentMapper::toDto).toList();
         }
         else{
-            return studentService.getAllStudents();
+            return studentService.getAllStudents().stream().map(StudentMapper::toDto).toList();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Student> addStudent(@RequestBody Student student){
-        Student addedStudent = studentService.addStudent(student);
-        return new ResponseEntity<>(addedStudent, HttpStatus.CREATED);
+    public ResponseEntity<StudentDTO> addStudent(@RequestBody @Valid StudentDTO dto){
+        Student savedStudent = studentService.addStudent(StudentMapper.toEntity(dto));
+        return new ResponseEntity<>(StudentMapper.toDto(savedStudent), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
