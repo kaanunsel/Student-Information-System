@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "student_course")
-public class StudentCourse {
+public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,7 +25,7 @@ public class StudentCourse {
     @Column(name = "enrolled_at")
     private LocalDateTime enrolledAt;
 
-    public StudentCourse() {
+    public Enrollment() {
     }
 
     public void setId(Long id) {

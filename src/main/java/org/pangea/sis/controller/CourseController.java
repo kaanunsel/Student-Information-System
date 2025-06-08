@@ -50,9 +50,9 @@ public class CourseController {
         return new ResponseEntity<>(CourseMapper.toDto(addedCourse), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id, @RequestBody @Valid CourseDTO dto){
-        return courseService.updateCourse(id, CourseMapper.toEntity(dto))
+    @PutMapping("/{code}")
+    public ResponseEntity<CourseDTO> updateCourse(@PathVariable String code, @RequestBody @Valid CourseDTO dto){
+        return courseService.updateCourse(code, CourseMapper.toEntity(dto))
                 .map(course -> new ResponseEntity<>(CourseMapper.toDto(course), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

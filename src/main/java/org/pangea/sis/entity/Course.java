@@ -24,7 +24,7 @@ public class Course {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
-    private List<StudentCourse> enrollments = new ArrayList<>();
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -66,11 +66,11 @@ public class Course {
         this.createdAt = createdAt;
     }
 
-    public List<StudentCourse> getEnrollments() {
+    public List<Enrollment> getEnrollments() {
         return enrollments;
     }
 
-    public void setEnrollments(List<StudentCourse> enrollments) {
+    public void setEnrollments(List<Enrollment> enrollments) {
         this.enrollments = enrollments;
     }
 }

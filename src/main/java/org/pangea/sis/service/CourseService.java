@@ -43,9 +43,9 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    public Optional<Course> updateCourse(Long id, Course updatedCourse) {
+    public Optional<Course> updateCourse(String code, Course updatedCourse) {
 
-        Optional<Course> optionalCourse = courseRepository.findById(id);
+        Optional<Course> optionalCourse = courseRepository.findByCode(code);
 
         if (optionalCourse.isPresent()) {
             Course existingCourse = optionalCourse.get();

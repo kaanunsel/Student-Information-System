@@ -1,13 +1,14 @@
 package org.pangea.sis.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class CourseDTO {
     @NotBlank(message = "Name is required")
     private String name;
     @NotBlank(message = "Course code is required")
     private String code;
-    @NotBlank(message = "Credit value is required")
+    @NotNull(message = "Credit value is required")
     private Integer credit;
 
     public CourseDTO(){}
@@ -34,11 +35,11 @@ public class CourseDTO {
         this.code = code;
     }
 
-    public @NotBlank(message = "Credit value is required") Integer getCredit() {
+    public @NotNull(message = "Credit value is required") Integer getCredit() {
         return credit;
     }
 
-    public void setCredit(@NotBlank(message = "Credit value is required") Integer credit) {
+    public void setCredit(@NotNull(message = "Credit value is required") Integer credit) {
         this.credit = credit;
     }
 }
