@@ -4,12 +4,13 @@ import org.pangea.sis.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.pangea.sis.entity.Student;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class StudentService {
     private final StudentRepository studentRepository;
 
