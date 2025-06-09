@@ -9,24 +9,44 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a student in the system.
+ * A student can enroll in multiple courses and have an advisor.
+ */
 @Entity
 @Table(name = "student")
 public class Student {
 
+    /** Unique identifier of the student. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    /** First name of the student. */
     private String name;
+
+    /** Last name of the student. */
     private String surname;
+
+    /** Email address of the student. */
     private String email;
+
+    /** Birth date of the student in yyyy-MM-dd format. */
     @Column(name = "birth_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
+
+    /** Date and time when the student was created (registered). */
     @Column(name = "created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdAt;
 
+    /**
+     * List of course enrollments by this student.
+     * This is a one-to-many relationship to Enrollment.
+     * Marked as @JsonIgnore to prevent circular reference in JSON.
+     */
     @OneToMany(
             mappedBy = "student",
             orphanRemoval = true,
@@ -35,12 +55,19 @@ public class Student {
     @JsonIgnore
     private List<Enrollment> enrollments = new ArrayList<>();
 
+    /**
+     * Instructor who acts as an academic advisor to the student.
+     */
     @ManyToOne
     @JoinColumn(name = "advisor_id")
     private Instructor advisor;
 
+    // --- Constructors ---
+
     public Student() {
     }
+
+    // --- Getters and Setters ---
 
     public List<Enrollment> getEnrollments() {
         return enrollments;

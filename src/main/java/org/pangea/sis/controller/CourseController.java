@@ -16,17 +16,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * REST controller for managing course-related endpoints.
+ */
 @RestController
 @RequestMapping("/course")
 public class CourseController {
+
     private final CourseService courseService;
     private final InstructorService instructorService;
+
+    /**
+     * Constructor for injecting CourseService and InstructorService.
+     */
     @Autowired
     public CourseController(CourseService courseService, InstructorService instructorService){
         this.courseService = courseService;
         this.instructorService = instructorService;
     }
 
+    /**
+     * Retrieves courses based on optional filters: ID, name, or code.
+     * If no filter is provided, returns all courses.
+     *
+     * @param id   optional course ID
+     * @param name optional course name
+     * @param code optional course code
+     * @return list of matching CourseDTOs
+     */
     @GetMapping
     public List<CourseDTO> getCourses(
             @RequestParam(required = false) Long id,
@@ -47,6 +64,12 @@ public class CourseController {
         }
     }
 
+    /**
+     * Adds a new course to the system.
+     *
+     * @param dto course data with instructor ID
+     * @return the created course DTO or 404 if instructor not found
+     */
     @PostMapping
     public ResponseEntity<?> addCourse(@RequestBody @Valid CourseDTO dto){
         Optional<Instructor> addedInstructor = instructorService.getInstructorById(dto.getInstructorId());
@@ -57,6 +80,13 @@ public class CourseController {
         return new ResponseEntity<>(CourseMapper.toDto(addedCourse), HttpStatus.CREATED);
     }
 
+    /**
+     * Updates a course by its code.
+     *
+     * @param code course code
+     * @param dto  updated course data
+     * @return updated course DTO or 404 if not found
+     */
     @PutMapping("/{code}")
     public ResponseEntity<CourseDTO> updateCourse(@PathVariable String code, @RequestBody @Valid CourseDTO dto){
         Instructor instructor = instructorService.getInstructorById(dto.getInstructorId()).get();
@@ -65,6 +95,12 @@ public class CourseController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * Deletes a course by its ID.
+     *
+     * @param id course ID
+     * @return confirmation message
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCourse(@PathVariable Long id){
         courseService.deleteCourseById(id);

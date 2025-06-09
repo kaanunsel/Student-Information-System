@@ -7,26 +7,40 @@ import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
 
+/**
+ * Data Transfer Object (DTO) for transferring student data.
+ * Used for creating, updating, and displaying student-related information.
+ */
 public class StudentDTO {
 
+    /** Unique identifier of the student (used in updates and retrieval). */
     private Long studentId;
+
+    /** First name of the student. Cannot be blank. */
     @NotBlank(message = "Name is required")
     private String name;
 
+    /** Last name of the student. Cannot be blank. */
     @NotBlank(message = "Surname is required")
     private String surname;
 
+    /** Email address of the student. Must be valid and not blank. */
     @NotBlank(message = "Email is required")
     @Email(message = "Not a valid email")
     private String email;
 
+    /** Date of birth. Must be in the past. */
     @NotNull(message = "Birth date is required")
     @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
 
+    /** ID of the advisor assigned to the student (optional). */
     private Long advisorId;
 
+    /** Name of the advisor (optional, for display). */
     private String advisorName;
+
+    // --- Constructors ---
 
     public StudentDTO() {}
 
@@ -46,6 +60,8 @@ public class StudentDTO {
         this.advisorId = advisorId;
         this.advisorName = advisorName;
     }
+
+    // --- Getters and Setters ---
 
     public @NotBlank(message = "Name is required") String getName() {
         return name;

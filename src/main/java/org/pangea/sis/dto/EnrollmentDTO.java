@@ -5,26 +5,40 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
+/**
+ * Data Transfer Object (DTO) for enrollment information.
+ * Used to transfer student-course enrollment data between layers.
+ */
 public class EnrollmentDTO {
 
+    /** Unique identifier of the enrollment record. */
     private Long id;
 
+    /** ID of the student who is enrolled. Cannot be null. */
     @NotNull(message = "Student ID must not be null")
     private Long studentId;
 
+    /** First name of the student (optional for display). */
     private String studentName;
 
+    /** Last name of the student (optional for display). */
     private String studentSurname;
 
+    /** ID of the course the student is enrolled in. Cannot be null. */
     @NotNull(message = "Course ID must not be null")
     private Long courseId;
 
+    /** Name of the course (optional for display). */
     private String courseName;
 
+    /** Grade assigned for the course. Must be 0 or greater. */
     @Min(value = 0, message = "Grade must be 0 or greater")
     private Integer grade;
 
+    /** Date and time when the student enrolled in the course. */
     private LocalDateTime enrolledAt;
+
+    // --- Constructors ---
 
     public EnrollmentDTO() {
     }
@@ -39,6 +53,8 @@ public class EnrollmentDTO {
         this.grade = grade;
         this.enrolledAt = enrolledAt;
     }
+
+    // --- Getters and Setters ---
 
     public Long getId() {
         return id;

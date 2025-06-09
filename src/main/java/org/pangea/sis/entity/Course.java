@@ -6,19 +6,37 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a course offered in the system.
+ * A course can have many enrollments and one instructor.
+ */
 @Entity
 @Table(name = "course")
 public class Course {
+
+    /** Unique identifier of the course. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    /** Name of the course (e.g., Calculus II). */
     private String name;
+
+    /** Unique course code (e.g., MATH202). */
     private String code;
+
+    /** Number of credits the course provides. */
     private Integer credit;
+
+    /** Date and time when the course was created. */
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    /**
+     * List of students enrolled in the course.
+     * Bi-directional mapping to Enrollment entity.
+     */
     @OneToMany(
             mappedBy = "course",
             orphanRemoval = true,
@@ -26,9 +44,15 @@ public class Course {
     )
     private List<Enrollment> enrollments = new ArrayList<>();
 
+    /**
+     * Instructor assigned to the course.
+     * Many courses can be taught by one instructor.
+     */
     @ManyToOne
     @JoinColumn(name = "instructor_id")
     private Instructor instructor;
+
+    // --- Getters and Setters ---
 
     public Long getId() {
         return id;

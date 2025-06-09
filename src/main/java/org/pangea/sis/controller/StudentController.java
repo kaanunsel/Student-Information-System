@@ -16,17 +16,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * REST controller for managing student-related endpoints.
+ */
 @RestController
 @RequestMapping("/student")
 public class StudentController {
+
     private final StudentService studentService;
     private final InstructorService instructorService;
+
+    /**
+     * Constructor for injecting student and instructor services.
+     */
     @Autowired
     public StudentController(StudentService studentService, InstructorService instructorService){
         this.studentService = studentService;
         this.instructorService = instructorService;
     }
 
+    /**
+     * Retrieves students filtered by optional parameters: ID, name, or surname.
+     * Returns all students if no filter is provided.
+     *
+     * @param id      optional student ID
+     * @param name    optional student name
+     * @param surname optional student surname
+     * @return list of matching StudentDTOs
+     */
     @GetMapping
     public List<StudentDTO> getStudents(
             @RequestParam(required = false) Long id,
@@ -34,7 +51,7 @@ public class StudentController {
             @RequestParam(required = false) String surname
     ){
         if (id != null) {
-        return studentService.getStudentById(id).stream().map(StudentMapper::toDto).toList();
+            return studentService.getStudentById(id).stream().map(StudentMapper::toDto).toList();
         }
         else if (name != null) {
             return studentService.getStudentsByName(name).stream().map(StudentMapper::toDto).toList();
@@ -47,6 +64,12 @@ public class StudentController {
         }
     }
 
+    /**
+     * Adds a new student with an advisor.
+     *
+     * @param dto StudentDTO containing student data
+     * @return created student as DTO or 404 if advisor not found
+     */
     @PostMapping
     public ResponseEntity<?> addStudent(@RequestBody @Valid StudentDTO dto){
         Optional<Instructor> addedAdvisor = instructorService.getInstructorById(dto.getAdvisorId());
@@ -57,16 +80,29 @@ public class StudentController {
         return new ResponseEntity<>(StudentMapper.toDto(savedStudent), HttpStatus.CREATED);
     }
 
+    /**
+     * Updates an existing student's information.
+     *
+     * @param id  ID of the student to update
+     * @param dto updated student data
+     * @return updated StudentDTO or 404 if not found
+     */
     @PutMapping("/{id}")
     public ResponseEntity<StudentDTO> updateStudent(
         @PathVariable Long id,
         @RequestBody @Valid StudentDTO dto
     ) {
-    return studentService.updateStudent(id, StudentMapper.toEntity(dto))
-            .map(updatedStudent -> new ResponseEntity<>(StudentMapper.toDto(updatedStudent), HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return studentService.updateStudent(id, StudentMapper.toEntity(dto))
+                .map(updatedStudent -> new ResponseEntity<>(StudentMapper.toDto(updatedStudent), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * Deletes a student by ID.
+     *
+     * @param id ID of the student to delete
+     * @return confirmation message
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable Long id){
         studentService.deleteStudent(id);

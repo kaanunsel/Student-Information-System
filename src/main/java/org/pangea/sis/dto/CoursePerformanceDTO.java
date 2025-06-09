@@ -1,17 +1,30 @@
 package org.pangea.sis.dto;
 
+/**
+ * Data Transfer Object used to represent performance statistics for a course.
+ * Includes average, min, max grades and student count for reporting purposes.
+ */
 public class CoursePerformanceDTO {
+
+    /** ID of the course. */
     private Long courseId;
 
+    /** Name of the course. */
     private String courseName;
 
+    /** Average grade of enrolled students. */
     private Double avgGrade;
 
+    /** Number of students enrolled in the course. */
     private Long numberOfStudents;
 
+    /** Minimum grade received by a student in this course. */
     private Integer minGrade;
 
+    /** Maximum grade received by a student in this course. */
     private Integer maxGrade;
+
+    // --- Constructor ---
 
     public CoursePerformanceDTO(Long courseId, String courseName, Double avgGrade, Long numberOfStudents, Integer minGrade, Integer maxGrade) {
         this.courseId = courseId;
@@ -21,6 +34,8 @@ public class CoursePerformanceDTO {
         this.minGrade = minGrade;
         this.maxGrade = maxGrade;
     }
+
+    // --- Getters and Setters ---
 
     public Long getCourseId() {
         return courseId;
