@@ -34,6 +34,11 @@ public class Student {
     )
     @JsonIgnore
     private List<Enrollment> enrollments = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "advisor_id")
+    private Instructor advisor;
+
     public Student() {
     }
 
@@ -91,5 +96,13 @@ public class Student {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public Instructor getAdvisor() {
+        return advisor;
+    }
+
+    public void setAdvisor(Instructor advisor) {
+        this.advisor = advisor;
     }
 }

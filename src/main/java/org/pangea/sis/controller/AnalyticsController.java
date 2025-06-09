@@ -12,7 +12,6 @@ import java.util.List;
 @RequestMapping("analytics")
 public class AnalyticsController {
 
-
     private final AnalyticsService analyticsService;
 
     public AnalyticsController(AnalyticsService analyticsService) {

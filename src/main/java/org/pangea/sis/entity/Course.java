@@ -26,6 +26,10 @@ public class Course {
     )
     private List<Enrollment> enrollments = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "instructor_id")
+    private Instructor instructor;
+
     public Long getId() {
         return id;
     }
@@ -72,5 +76,13 @@ public class Course {
 
     public void setEnrollments(List<Enrollment> enrollments) {
         this.enrollments = enrollments;
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
     }
 }

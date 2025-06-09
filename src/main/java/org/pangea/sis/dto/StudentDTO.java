@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 public class StudentDTO {
 
+    private Long studentId;
     @NotBlank(message = "Name is required")
     private String name;
 
@@ -23,6 +24,10 @@ public class StudentDTO {
     @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
 
+    private Long advisorId;
+
+    private String advisorName;
+
     public StudentDTO() {}
 
     public StudentDTO(String name, String surname, String email, LocalDate birthDate) {
@@ -30,6 +35,16 @@ public class StudentDTO {
         this.surname = surname;
         this.email = email;
         this.birthDate = birthDate;
+    }
+
+    public StudentDTO(Long studentId, String name, String surname, String email, LocalDate birthDate, Long advisorId, String advisorName) {
+        this.studentId = studentId;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.birthDate = birthDate;
+        this.advisorId = advisorId;
+        this.advisorName = advisorName;
     }
 
     public @NotBlank(message = "Name is required") String getName() {
@@ -62,5 +77,29 @@ public class StudentDTO {
 
     public void setBirthDate(@NotNull(message = "Birth date is required") @Past(message = "Birth date must be in the past") LocalDate birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+
+    public Long getAdvisorId() {
+        return advisorId;
+    }
+
+    public void setAdvisorId(Long advisorId) {
+        this.advisorId = advisorId;
+    }
+
+    public String getAdvisorName() {
+        return advisorName;
+    }
+
+    public void setAdvisorName(String advisorName) {
+        this.advisorName = advisorName;
     }
 }
