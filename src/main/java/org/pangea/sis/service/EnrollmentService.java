@@ -50,6 +50,17 @@ public class EnrollmentService {
     }
 
     /**
+     * Retrieves all enrollments associated with a given course ID.
+     *
+     * @param id course ID
+     * @return list of enrollments for that course
+     */
+    public List<Enrollment> getByCourseId(Long id){
+        return enrollmentRepository.findByCourseId(id);
+    }
+
+
+    /**
      * Creates a new enrollment and sets the current timestamp.
      *
      * @param enrollment enrollment entity to save

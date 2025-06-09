@@ -1,36 +1,66 @@
-**SIS – Student Information System**
+# SIS – Student Information System
 
-This is a basic Student Information System project developed using Spring Boot, Vue.js, and PostgreSQL. It allows managing students, courses, and their grades in a simple and straightforward way.
+This is a basic Student Information System project developed using Spring Boot, Vue.js, and PostgreSQL. It enables managing students, courses, enrollments, and grades in a structured and scalable way.
 
-**Project Description**
+## Project Description
 
-SIS helps track:
-	•	Which courses a student is taking
-	•	The grades they received
-	•	Which students are enrolled in a course
-	•	Adding and removing students and courses
-	•	Assigning or updating grades
+SIS allows users to:
+- Track which courses a student is enrolled in
+- Record and update the grades they receive
+- List students enrolled in a specific course
+- Add, update, and delete students and courses
+- Assign or change grades for student-course pairs
+- View performance analytics for each course
 
-Note: There is no login system. All queries work directly with ID values.
+Note: This application does not include authentication. All operations are performed via entity IDs.
 
-**Tech Stack**
-Spring Boot	for Backend (Java API)
-REST API	for Communication (HTTP methods)
-PostgreSQL for Database
-JUnit	for Unit testing
-Vue.js for Frontend
+## Core Features
 
-**Example Features**
-	•	GET /students/{id}: See a student’s courses and grades
-	•	GET /courses/{id}/students: See all students in a course
-	•	POST /students: Add a new student
-	•	DELETE /courses/{id}: Remove a course
-	•	PUT /students/{id}/courses/{courseId}/grade: Update a grade
+### Student Management
+- Add, update, and delete students
+- Assign an advisor (instructor) to each student
+- Retrieve all students or filter by ID, name, or surname
 
-**Setup**
-	1.	Make sure PostgreSQL is installed and running.
-	2.	Clone this repository.
-	3.	Configure your database credentials in application.properties.
-	4.	Run the application with IntelliJ or use:  ./mvnw spring-boot:run
+### Course Management
+- Add, update, and delete courses
+- Assign an instructor to each course
+- Retrieve all courses or filter by ID, name, or code
 
-Developed by **Kaan Unsel** as a summer internship project.
+### Enrollment Management
+- Enroll a student into a course
+- Remove a student from a course
+- Enter or update grades for a course
+- View all enrollments or filter by student ID
+
+### Analytics & Reporting
+- Get average, minimum, and maximum grades for each course
+- See total number of students per course
+- Generate course performance summaries
+
+## Tech Stack
+
+- Spring Boot – Backend (Java)
+- REST API – Communication Layer
+- PostgreSQL – Relational Database
+- JUnit – Unit Testing Framework
+- Vue.js – Frontend (SPA)
+
+## Example Endpoints
+
+- `GET /student?id=1` – View student’s course and grade info
+- `GET /course?id=2` – View course details
+- `GET /enrollment/student?studentId=1` – View a student's enrollments
+- `POST /student` – Add a new student
+- `DELETE /course/2` – Delete a course
+- `PATCH /enrollment/5/grade?grade=90` – Update a student’s grade
+
+## Setup Instructions
+
+1. Make sure PostgreSQL is installed and running.
+2. Clone this repository.
+3. Update database credentials in `application.properties`.
+4. Run the backend with:
+
+## Developer
+
+This project was developed by **Kaan Unsel** as part of a summer internship preparation assignment.

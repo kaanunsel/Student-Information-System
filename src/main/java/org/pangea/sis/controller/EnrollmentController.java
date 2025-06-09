@@ -59,6 +59,17 @@ public class EnrollmentController {
     }
 
     /**
+     * Retrieves enrollments for a specific course.
+     *
+     * @param courseId ID of the student
+     * @return list of the course's enrollments
+     */
+    @GetMapping("/course")
+    public List<EnrollmentDTO> getByCourseId(@RequestParam Long courseId){
+        return enrollmentService.getByCourseId(courseId).stream().map(EnrollmentMapper::toDTO).toList();
+    }
+
+    /**
      * Creates a new enrollment using student and course IDs.
      *
      * @param dto enrollment data

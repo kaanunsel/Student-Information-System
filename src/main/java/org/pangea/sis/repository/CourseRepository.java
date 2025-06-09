@@ -45,4 +45,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
      * @return optional containing the course if found
      */
     Optional<Course> findByCode(String code);
+
+    /**
+     * Finds all courses based on instructor id.
+     *
+     * @param id instructor's id
+     * @return list of matching courses
+     */
+    List<Course> findAllByInstructorId(Long id);
 }

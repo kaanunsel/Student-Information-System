@@ -69,6 +69,16 @@ public class CourseService {
     }
 
     /**
+     * Searches for courses by their instructors' ids.
+     *
+     * @param instructorId instructor's id
+     * @return list of matching courses
+     */
+    public List<Course> getCoursesByInstructorId(Long instructorId){
+        return courseRepository.findAllByInstructorId(instructorId);
+    }
+
+    /**
      * Adds a new course with the current timestamp.
      *
      * @param course course entity to add

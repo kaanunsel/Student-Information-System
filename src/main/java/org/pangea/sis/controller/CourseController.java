@@ -47,17 +47,17 @@ public class CourseController {
     @GetMapping
     public List<CourseDTO> getCourses(
             @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String code
+            @RequestParam(required = false) String code,
+            @RequestParam(required = false) Long instructorId
     ){
         if(id != null){
             return courseService.getCourseById(id).stream().map(CourseMapper::toDto).toList();
         }
-        else if (name != null){
-            return courseService.getCoursesByName(name).stream().map(CourseMapper::toDto).toList();
-        }
         else if (code != null){
             return courseService.getCoursesByCode(code).stream().map(CourseMapper::toDto).toList();
+        }
+        else if (instructorId != null){
+            return courseService.getCoursesByInstructorId(instructorId).stream().map(CourseMapper::toDto).toList();
         }
         else {
             return courseService.getAllCourses().stream().map(CourseMapper::toDto).toList();
