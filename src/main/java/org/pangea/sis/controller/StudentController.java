@@ -3,7 +3,9 @@ package org.pangea.sis.controller;
 import jakarta.validation.Valid;
 import org.pangea.sis.dto.StudentDTO;
 import org.pangea.sis.dto.StudentMapper;
+import org.pangea.sis.entity.Instructor;
 import org.pangea.sis.entity.Student;
+import org.pangea.sis.service.InstructorService;
 import org.pangea.sis.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
@@ -12,15 +14,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
-
+    private final InstructorService instructorService;
     @Autowired
-    public StudentController(StudentService studentService){
+    public StudentController(StudentService studentService, InstructorService instructorService){
         this.studentService = studentService;
+        this.instructorService = instructorService;
     }
 
     @GetMapping
@@ -44,8 +48,12 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentDTO> addStudent(@RequestBody @Valid StudentDTO dto){
-        Student savedStudent = studentService.addStudent(StudentMapper.toEntity(dto));
+    public ResponseEntity<?> addStudent(@RequestBody @Valid StudentDTO dto){
+        Optional<Instructor> addedAdvisor = instructorService.getInstructorById(dto.getAdvisorId());
+        if(addedAdvisor.isEmpty()){
+            return new ResponseEntity<String>("No such advisor", HttpStatus.NOT_FOUND);
+        }
+        Student savedStudent = studentService.addStudent(StudentMapper.toEntity(dto, addedAdvisor.get()));
         return new ResponseEntity<>(StudentMapper.toDto(savedStudent), HttpStatus.CREATED);
     }
 

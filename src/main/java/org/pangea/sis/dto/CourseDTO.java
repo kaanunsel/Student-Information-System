@@ -11,12 +11,20 @@ public class CourseDTO {
     @NotNull(message = "Credit value is required")
     private Integer credit;
 
+    @NotNull(message = "Instructor Id is required")
+    private Long instructorId;
+
+    @NotBlank(message = "Instructor name is required")
+    private String instructorName;
+
     public CourseDTO(){}
 
-    public CourseDTO(String name, String code, Integer credit){
+    public CourseDTO(String name, String code, Integer credit, Long instructorId, String instructorName){
         this.name = name;
         this.code = code;
         this.credit = credit;
+        this.instructorId = instructorId;
+        this.instructorName = instructorName;
     }
 
     public @NotBlank(message = "Name is required") String getName() {
@@ -41,5 +49,21 @@ public class CourseDTO {
 
     public void setCredit(@NotNull(message = "Credit value is required") Integer credit) {
         this.credit = credit;
+    }
+
+    public @NotNull(message = "Instructor name is required") String getInstructorName() {
+        return instructorName;
+    }
+
+    public void setInstructorName(@NotNull(message = "Instructor name is required") String instructorName) {
+        this.instructorName = instructorName;
+    }
+
+    public @NotNull(message = "Instructor Id is required") Long getInstructorId() {
+        return instructorId;
+    }
+
+    public void setInstructorId(@NotNull(message = "Instructor Id is required") Long instructorId) {
+        this.instructorId = instructorId;
     }
 }

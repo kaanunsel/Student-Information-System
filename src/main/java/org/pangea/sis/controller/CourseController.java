@@ -4,7 +4,9 @@ import jakarta.validation.Valid;
 import org.pangea.sis.dto.CourseDTO;
 import org.pangea.sis.dto.CourseMapper;
 import org.pangea.sis.entity.Course;
+import org.pangea.sis.entity.Instructor;
 import org.pangea.sis.service.CourseService;
+import org.pangea.sis.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -18,10 +20,11 @@ import java.util.Optional;
 @RequestMapping("/course")
 public class CourseController {
     private final CourseService courseService;
-
+    private final InstructorService instructorService;
     @Autowired
-    public CourseController(CourseService courseService){
+    public CourseController(CourseService courseService, InstructorService instructorService){
         this.courseService = courseService;
+        this.instructorService = instructorService;
     }
 
     @GetMapping
@@ -45,14 +48,19 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<CourseDTO> addCourse(@RequestBody @Valid CourseDTO dto){
-        Course addedCourse = courseService.addCourse(CourseMapper.toEntity(dto));
+    public ResponseEntity<?> addCourse(@RequestBody @Valid CourseDTO dto){
+        Optional<Instructor> addedInstructor = instructorService.getInstructorById(dto.getInstructorId());
+        if(addedInstructor.isEmpty()){
+            return new ResponseEntity<String>("No such instructor", HttpStatus.NOT_FOUND);
+        }
+        Course addedCourse = courseService.addCourse(CourseMapper.toEntity(dto, addedInstructor.get()));
         return new ResponseEntity<>(CourseMapper.toDto(addedCourse), HttpStatus.CREATED);
     }
 
     @PutMapping("/{code}")
     public ResponseEntity<CourseDTO> updateCourse(@PathVariable String code, @RequestBody @Valid CourseDTO dto){
-        return courseService.updateCourse(code, CourseMapper.toEntity(dto))
+        Instructor instructor = instructorService.getInstructorById(dto.getInstructorId()).get();
+        return courseService.updateCourse(code, CourseMapper.toEntity(dto, instructor))
                 .map(course -> new ResponseEntity<>(CourseMapper.toDto(course), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

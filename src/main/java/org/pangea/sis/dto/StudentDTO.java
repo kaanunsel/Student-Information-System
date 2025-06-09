@@ -87,19 +87,19 @@ public class StudentDTO {
         this.studentId = studentId;
     }
 
-    public Long getAdvisorId() {
-        return advisorId;
-    }
-
-    public void setAdvisorId(Long advisorId) {
-        this.advisorId = advisorId;
-    }
-
     public String getAdvisorName() {
         return advisorName;
     }
 
     public void setAdvisorName(String advisorName) {
         this.advisorName = advisorName;
+    }
+
+    public Long getAdvisorId() {
+        return advisorId;
+    }
+
+    public void setAdvisorId(Long advisorId) {
+        this.advisorId = advisorId;
     }
 }
