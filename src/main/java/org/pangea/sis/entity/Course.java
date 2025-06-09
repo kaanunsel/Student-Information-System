@@ -35,7 +35,7 @@ public class Course {
 
     /**
      * List of students enrolled in the course.
-     * Bi-directional mapping to Enrollment entity.
+     * Bidirectional mapping to Enrollment entity.
      */
     @OneToMany(
             mappedBy = "course",
