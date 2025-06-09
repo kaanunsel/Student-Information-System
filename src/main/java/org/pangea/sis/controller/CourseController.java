@@ -40,7 +40,7 @@ public class CourseController {
      * If no filter is provided, returns all courses.
      *
      * @param id   optional course ID
-     * @param name optional course name
+     * @param instructorId optional instructor ID
      * @param code optional course code
      * @return list of matching CourseDTOs
      */

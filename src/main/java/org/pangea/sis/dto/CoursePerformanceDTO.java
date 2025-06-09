@@ -1,12 +1,16 @@
 package org.pangea.sis.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 /**
  * Data Transfer Object used to represent performance statistics for a course.
  * Includes average, min, max grades and student count for reporting purposes.
  */
 public class CoursePerformanceDTO {
 
+
     /** ID of the course. */
+    @NotNull(message = "Course ID is required")
     private Long courseId;
 
     /** Name of the course. */
