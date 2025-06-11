@@ -32,15 +32,18 @@
 </template>
 
 <script setup>
+// Dashboard view presenting high level statistics
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 const api = axios.create({ baseURL: 'http://localhost:8080' })
 
+// arrays used to store fetched statistics
 const students = ref([])
 const instructors = ref([])
 const courseStats = ref([])
 
+// retrieve summary stats from backend
 const load = async () => {
   try {
     const [sRes, iRes, cRes] = await Promise.all([
@@ -56,6 +59,7 @@ const load = async () => {
   }
 }
 
+// fetch data once component is mounted
 onMounted(load)
 </script>
 
@@ -63,6 +67,9 @@ onMounted(load)
 .container {
   width: 80%;
   margin: auto;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 4px;
 }
 
 .summary {
@@ -77,7 +84,11 @@ table {
 th,
 td {
   border: 1px solid #ccc;
-  padding: 4px 8px;
+  padding: 6px 8px;
   text-align: left;
+}
+
+tr:hover {
+  background: #f1f1f1;
 }
 </style>

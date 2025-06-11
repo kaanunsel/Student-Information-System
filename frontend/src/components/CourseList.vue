@@ -58,11 +58,21 @@
           </tr>
         </tbody>
       </table>
+      <div class="edit-form">
+        <h4>Edit Course</h4>
+        <input v-model="editCourse.name" placeholder="Name" />
+        <input v-model="editCourse.code" placeholder="Code" />
+        <input type="number" v-model.number="editCourse.credit" placeholder="Credit" />
+        <input type="number" v-model.number="editCourse.instructorId" placeholder="Instructor ID" />
+        <input v-model="editCourse.instructorName" placeholder="Instructor Name" />
+        <button @click="updateCourse">Save</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+// Component for viewing and editing course information
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
@@ -70,9 +80,15 @@ const api = axios.create({
   baseURL: 'http://localhost:8080'
 })
 
+// array holding all courses returned from backend
 const courses = ref([])
+// course currently selected from the list
 const selectedCourse = ref(null)
+// enrollments of the selected course
 const enrollments = ref([])
+// editable copy of the selected course
+const editCourse = ref({})
+// model for add course form
 const newCourse = ref({
   name: '',
   code: '',
@@ -81,8 +97,10 @@ const newCourse = ref({
   instructorName: ''
 })
 
+// when a course row is clicked fetch its enrollments
 const selectCourse = async (course) => {
   selectedCourse.value = course
+  editCourse.value = { ...course }
   enrollments.value = []
   try {
     const res = await api.get('/enrollment/course', {
@@ -94,6 +112,7 @@ const selectCourse = async (course) => {
   }
 }
 
+// create a new course via API
 const addCourse = async () => {
   try {
     await api.post('/course', newCourse.value)
@@ -111,6 +130,7 @@ const addCourse = async () => {
   }
 }
 
+// delete a course and refresh list
 const removeCourse = async (id) => {
   try {
     await api.delete(`/course/${id}`)
@@ -125,6 +145,23 @@ const removeCourse = async (id) => {
   }
 }
 
+// persist changes made to the selected course
+const updateCourse = async () => {
+  try {
+    await api.put(`/course/${selectedCourse.value.code}`, editCourse.value)
+    const res = await api.get('/course')
+    courses.value = res.data
+    const found = courses.value.find(c => c.courseId === selectedCourse.value.courseId)
+    if (found) {
+      selectedCourse.value = found
+      editCourse.value = { ...found }
+    }
+  } catch (err) {
+    console.error('Failed to update course', err)
+  }
+}
+
+// fetch courses on component mount
 onMounted(async () => {
   try {
     const response = await api.get('/course')
@@ -139,6 +176,8 @@ onMounted(async () => {
 .container {
   display: flex;
   gap: 20px;
+  width: 90%;
+  margin: auto;
 }
 
 .list {
@@ -152,13 +191,18 @@ onMounted(async () => {
 table {
   width: 100%;
   border-collapse: collapse;
+  background: #fff;
 }
 
 th,
 td {
   border: 1px solid #ccc;
-  padding: 4px 8px;
+  padding: 6px 8px;
   text-align: left;
+}
+
+tr:hover {
+  background: #f1f1f1;
 }
 
 button {

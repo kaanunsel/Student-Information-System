@@ -53,6 +53,7 @@
             <th>Course ID</th>
             <th>Course Name</th>
             <th>Grade</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -66,6 +67,9 @@
                 @change="updateGrade(enr)"
               />
             </td>
+            <td>
+              <button @click="removeEnrollment(enr.id)">Remove</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -74,11 +78,27 @@
         <input v-model.number="enrollCourseId" placeholder="Course ID" />
         <button @click="enroll">Enroll</button>
       </div>
+      <div class="edit-form">
+        <h4>Edit Student</h4>
+        <input v-model="editStudent.name" placeholder="Name" />
+        <input v-model="editStudent.surname" placeholder="Surname" />
+        <input v-model="editStudent.email" placeholder="Email" />
+        <input v-model="editStudent.birthDate" placeholder="Birth Date" />
+        <input
+          v-model.number="editStudent.advisorId"
+          placeholder="Advisor ID"
+          type="number"
+        />
+        <button @click="updateStudent">Save</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+// Vue component responsible for displaying and managing students
+// This file demonstrates CRUD operations as well as enrollment management
+// for each student.
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
@@ -86,9 +106,15 @@ const api = axios.create({
   baseURL: 'http://localhost:8080'
 })
 
+// list of all students fetched from the API
 const students = ref([])
+// currently selected student whose details are shown
 const selectedStudent = ref(null)
+// enrollment list for the selected student
 const enrollments = ref([])
+// editable copy of the selected student
+const editStudent = ref({})
+// model for the "add student" form
 const newStudent = ref({
   name: '',
   surname: '',
@@ -96,10 +122,14 @@ const newStudent = ref({
   birthDate: '',
   advisorId: null
 })
+// course id input used when enrolling the selected student into a course
 const enrollCourseId = ref(null)
 
+// fetch enrollments for the clicked student and prepare edit form
 const selectStudent = async (student) => {
   selectedStudent.value = student
+  // create a shallow copy for editing so we don't mutate the table list
+  editStudent.value = { ...student }
   enrollments.value = []
   try {
     const res = await api.get('/enrollment/student', {
@@ -111,6 +141,7 @@ const selectStudent = async (student) => {
   }
 }
 
+// call API to create a new student
 const addStudent = async () => {
   try {
     await api.post('/student', { ...newStudent.value, studentId: 0 })
@@ -128,6 +159,7 @@ const addStudent = async () => {
   }
 }
 
+// enroll the currently selected student into a new course
 const enroll = async () => {
   if (!selectedStudent.value) return
   try {
@@ -145,6 +177,7 @@ const enroll = async () => {
   }
 }
 
+// update grade for a particular enrollment record
 const updateGrade = async (enr) => {
   try {
     await api.patch(`/enrollment/${enr.id}/grade`, null, {
@@ -155,6 +188,38 @@ const updateGrade = async (enr) => {
   }
 }
 
+// remove an enrollment completely
+const removeEnrollment = async (enrId) => {
+  try {
+    await api.delete(`/enrollment/${enrId}`)
+    // refresh enrollment list
+    const res = await api.get('/enrollment/student', {
+      params: { studentId: selectedStudent.value.studentId }
+    })
+    enrollments.value = res.data
+  } catch (err) {
+    console.error('Failed to remove enrollment', err)
+  }
+}
+
+// persist edits to the selected student
+const updateStudent = async () => {
+  try {
+    await api.put(`/student/${selectedStudent.value.studentId}`, editStudent.value)
+    const res = await api.get('/student')
+    students.value = res.data
+    // update selectedStudent reference from refreshed list
+    const found = students.value.find(s => s.studentId === selectedStudent.value.studentId)
+    if (found) {
+      selectedStudent.value = found
+      editStudent.value = { ...found }
+    }
+  } catch (err) {
+    console.error('Failed to update student', err)
+  }
+}
+
+// delete a student by id and refresh list
 const removeStudent = async (id) => {
   try {
     await api.delete(`/student/${id}`)
@@ -169,6 +234,7 @@ const removeStudent = async (id) => {
   }
 }
 
+  // initial fetch of all students when component is created
   onMounted(async () => {
     try {
       const response = await api.get('/student')
@@ -183,6 +249,8 @@ const removeStudent = async (id) => {
 .container {
   display: flex;
   gap: 20px;
+  width: 90%;
+  margin: auto;
 }
 
 .list {
@@ -196,13 +264,18 @@ const removeStudent = async (id) => {
 table {
   width: 100%;
   border-collapse: collapse;
+  background: #fff;
 }
 
 th,
 td {
   border: 1px solid #ccc;
-  padding: 4px 8px;
+  padding: 6px 8px;
   text-align: left;
+}
+
+tr:hover {
+  background: #f1f1f1;
 }
 
 button {
