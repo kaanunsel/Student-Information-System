@@ -9,6 +9,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public class CourseDTO {
 
+    /** Unique identifier of the course. */
+    private Long courseId;
+
     /** Name of the course (e.g., Logic Programming). Cannot be blank. */
     @NotBlank(message = "Name is required")
     private String name;
@@ -33,7 +36,8 @@ public class CourseDTO {
 
     public CourseDTO(){}
 
-    public CourseDTO(String name, String code, Integer credit, Long instructorId, String instructorName){
+    public CourseDTO(Long courseId, String name, String code, Integer credit, Long instructorId, String instructorName){
+        this.courseId = courseId;
         this.name = name;
         this.code = code;
         this.credit = credit;
@@ -81,5 +85,13 @@ public class CourseDTO {
 
     public void setInstructorId(@NotNull(message = "Instructor Id is required") Long instructorId) {
         this.instructorId = instructorId;
+    }
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
     }
 }

@@ -33,6 +33,7 @@ public class CourseMapper {
      */
     public static CourseDTO toDto(Course course){
         return new CourseDTO(
+                course.getId(),
                 course.getName(),
                 course.getCode(),
                 course.getCredit(),
