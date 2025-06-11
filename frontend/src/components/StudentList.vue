@@ -2,16 +2,30 @@
   <div class="container">
     <div class="list">
       <h2>Students</h2>
-      <ul>
-        <li
-          v-for="student in students"
-          :key="student.studentId"
-          @click="selectStudent(student)"
-        >
-          {{ student.studentId }} - {{ student.name }} {{ student.surname }} -
-          {{ student.email }}
-        </li>
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="student in students"
+            :key="student.studentId"
+            @click="selectStudent(student)"
+          >
+            <td>{{ student.studentId }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.surname }}</td>
+            <td>{{ student.email }}</td>
+            <td><button @click.stop="removeStudent(student.studentId)">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
       <div class="add-form">
         <h3>Add Student</h3>
         <input v-model="newStudent.name" placeholder="Name" />
@@ -141,6 +155,20 @@ const updateGrade = async (enr) => {
   }
 }
 
+const removeStudent = async (id) => {
+  try {
+    await api.delete(`/student/${id}`)
+    const res = await api.get('/student')
+    students.value = res.data
+    if (selectedStudent.value && selectedStudent.value.studentId === id) {
+      selectedStudent.value = null
+      enrollments.value = []
+    }
+  } catch (err) {
+    console.error('Failed to delete student', err)
+  }
+}
+
   onMounted(async () => {
     try {
       const response = await api.get('/student')
@@ -158,15 +186,26 @@ const updateGrade = async (enr) => {
 }
 
 .list {
-  width: 40%;
+  width: 45%;
 }
 
 .detail {
   flex: 1;
 }
 
-li {
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  text-align: left;
+}
+
+button {
   cursor: pointer;
-  margin-bottom: 4px;
 }
 </style>

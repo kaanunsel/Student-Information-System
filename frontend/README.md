@@ -1,6 +1,7 @@
 # SIS Frontend
 
-This is a small Vue.js single page application that works with the backend in this repository. It lists students and courses from the REST API.
+This is a small Vue.js single page application that works with the backend in this repository. It lists and manages students, courses and instructors from the REST API.
+A statistics page shows course performance data using the analytics service.
 
 ## Development Server
 

@@ -2,15 +2,32 @@
   <div class="container">
     <div class="list">
       <h2>Courses</h2>
-      <ul>
-        <li
-          v-for="course in courses"
-          :key="course.courseId"
-          @click="selectCourse(course)"
-        >
-          {{ course.courseId }} - {{ course.name }} ({{ course.code }})
-        </li>
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Credit</th>
+            <th>Instructor</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="course in courses"
+            :key="course.courseId"
+            @click="selectCourse(course)"
+          >
+            <td>{{ course.courseId }}</td>
+            <td>{{ course.name }}</td>
+            <td>{{ course.code }}</td>
+            <td>{{ course.credit }}</td>
+            <td>{{ course.instructorName }}</td>
+            <td><button @click.stop="removeCourse(course.courseId)">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
       <div class="add-form">
         <h3>Add Course</h3>
         <input v-model="newCourse.name" placeholder="Name" />
@@ -94,6 +111,20 @@ const addCourse = async () => {
   }
 }
 
+const removeCourse = async (id) => {
+  try {
+    await api.delete(`/course/${id}`)
+    const res = await api.get('/course')
+    courses.value = res.data
+    if (selectedCourse.value && selectedCourse.value.courseId === id) {
+      selectedCourse.value = null
+      enrollments.value = []
+    }
+  } catch (err) {
+    console.error('Failed to delete course', err)
+  }
+}
+
 onMounted(async () => {
   try {
     const response = await api.get('/course')
@@ -111,15 +142,26 @@ onMounted(async () => {
 }
 
 .list {
-  width: 40%;
+  width: 45%;
 }
 
 .detail {
   flex: 1;
 }
 
-li {
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  text-align: left;
+}
+
+button {
   cursor: pointer;
-  margin-bottom: 4px;
 }
 </style>
