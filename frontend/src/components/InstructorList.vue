@@ -35,14 +35,18 @@
 </template>
 
 <script setup>
+// Component that lists instructors and allows adding or removing them
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 const api = axios.create({ baseURL: 'http://localhost:8080' })
 
+// all instructors returned from backend
 const instructors = ref([])
+// model for the "add instructor" form
 const newInstructor = ref({ name: '', surname: '', email: '', password: '' })
 
+// fetch instructor list from API
 const load = async () => {
   try {
     const res = await api.get('/instructor')
@@ -52,6 +56,7 @@ const load = async () => {
   }
 }
 
+// create a new instructor
 const addInstructor = async () => {
   try {
     await api.post('/instructor', newInstructor.value)
@@ -62,6 +67,7 @@ const addInstructor = async () => {
   }
 }
 
+// delete instructor by id
 const removeInstructor = async (id) => {
   try {
     await api.delete(`/instructor/${id}`)
@@ -71,12 +77,15 @@ const removeInstructor = async (id) => {
   }
 }
 
+// initial load of instructors
 onMounted(load)
 </script>
 
 <style scoped>
 .container {
   display: flex;
+  width: 90%;
+  margin: auto;
 }
 
 .list {
@@ -93,6 +102,6 @@ button {
 
 th,
 td {
-  padding: 4px 8px;
+  padding: 6px 8px;
 }
 </style>
