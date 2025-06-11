@@ -106,6 +106,6 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable Long id){
         studentService.deleteStudent(id);
-        return new ResponseEntity<>("Player deleted.", HttpStatus.OK);
+        return new ResponseEntity<>("Student deleted.", HttpStatus.OK);
     }
 }

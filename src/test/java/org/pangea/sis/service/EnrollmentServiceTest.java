@@ -101,6 +101,7 @@ class EnrollmentServiceTest {
         enrollment.setId(enrollmentId);
         enrollment.setGrade(70);
         when(enrollmentRepository.findById(enrollmentId)).thenReturn(Optional.of(enrollment));
+        when(enrollmentRepository.save(any(Enrollment.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
         EnrollmentDTO dto = enrollmentService.updateGrade(enrollmentId, newGrade);
@@ -109,6 +110,7 @@ class EnrollmentServiceTest {
         assertEquals(newGrade, dto.getGrade());
         assertEquals(enrollmentId, dto.getId());
         verify(enrollmentRepository).findById(enrollmentId);
+        verify(enrollmentRepository).save(enrollment);
     }
 
     @Test
