@@ -12,6 +12,7 @@ import org.pangea.sis.service.StudentService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -77,8 +78,14 @@ public class EnrollmentController {
      */
     @PostMapping
     public ResponseEntity<EnrollmentDTO> addEnrollment(@RequestBody @Valid EnrollmentDTO dto){
-        Student enrolledStudent = studentService.getStudentById(dto.getStudentId()).getFirst();
-        Course enrolledCourse = courseService.getCourseById(dto.getCourseId()).getFirst();
+        Student enrolledStudent = studentService.getStudentById(dto.getStudentId())
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
+        Course enrolledCourse = courseService.getCourseById(dto.getCourseId())
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
         Enrollment createdEnrollment = enrollmentService.createEnrollment(
                 EnrollmentMapper.toEntity(dto, enrolledStudent, enrolledCourse)
         );

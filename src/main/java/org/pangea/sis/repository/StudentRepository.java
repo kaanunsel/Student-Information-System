@@ -37,4 +37,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      * @return optional containing the student if found
      */
     Optional<Student> findByEmail(String email);
+
+    /**
+     * Finds all students advised by the given instructor.
+     *
+     * @param advisorId instructor ID acting as advisor
+     * @return list of students advised by that instructor
+     */
+    List<Student> findAllByAdvisorId(Long advisorId);
 }

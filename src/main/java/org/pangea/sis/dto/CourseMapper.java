@@ -32,13 +32,19 @@ public class CourseMapper {
      * @return a CourseDTO containing simplified course data
      */
     public static CourseDTO toDto(Course course){
+        Long instructorId = null;
+        String instructorName = null;
+        if (course.getInstructor() != null) {
+            instructorId = course.getInstructor().getId();
+            instructorName = course.getInstructor().getName();
+        }
         return new CourseDTO(
                 course.getId(),
                 course.getName(),
                 course.getCode(),
                 course.getCredit(),
-                course.getInstructor().getId(),
-                course.getInstructor().getName()
+                instructorId,
+                instructorName
         );
     }
 }
