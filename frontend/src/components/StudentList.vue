@@ -12,6 +12,22 @@
           {{ student.email }}
         </li>
       </ul>
+      <div class="add-form">
+        <h3>Add Student</h3>
+        <input v-model="newStudent.name" placeholder="Name" />
+        <input v-model="newStudent.surname" placeholder="Surname" />
+        <input v-model="newStudent.email" placeholder="Email" />
+        <input
+          v-model="newStudent.birthDate"
+          placeholder="Birth Date (YYYY-MM-DD)"
+        />
+        <input
+          v-model.number="newStudent.advisorId"
+          placeholder="Advisor ID"
+          type="number"
+        />
+        <button @click="addStudent">Add</button>
+      </div>
     </div>
     <div class="detail" v-if="selectedStudent">
       <h3>
@@ -29,10 +45,21 @@
           <tr v-for="enr in enrollments" :key="enr.id">
             <td>{{ enr.courseId }}</td>
             <td>{{ enr.courseName }}</td>
-            <td>{{ enr.grade }}</td>
+            <td>
+              <input
+                type="number"
+                v-model.number="enr.grade"
+                @change="updateGrade(enr)"
+              />
+            </td>
           </tr>
         </tbody>
       </table>
+      <div class="enroll-form">
+        <h4>Enroll in Course</h4>
+        <input v-model.number="enrollCourseId" placeholder="Course ID" />
+        <button @click="enroll">Enroll</button>
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +75,14 @@ const api = axios.create({
 const students = ref([])
 const selectedStudent = ref(null)
 const enrollments = ref([])
+const newStudent = ref({
+  name: '',
+  surname: '',
+  email: '',
+  birthDate: '',
+  advisorId: null
+})
+const enrollCourseId = ref(null)
 
 const selectStudent = async (student) => {
   selectedStudent.value = student
@@ -59,6 +94,50 @@ const selectStudent = async (student) => {
     enrollments.value = res.data
   } catch (err) {
     console.error('Failed to fetch enrollments', err)
+  }
+}
+
+const addStudent = async () => {
+  try {
+    await api.post('/student', { ...newStudent.value, studentId: 0 })
+    const res = await api.get('/student')
+    students.value = res.data
+    newStudent.value = {
+      name: '',
+      surname: '',
+      email: '',
+      birthDate: '',
+      advisorId: null
+    }
+  } catch (err) {
+    console.error('Failed to add student', err)
+  }
+}
+
+const enroll = async () => {
+  if (!selectedStudent.value) return
+  try {
+    await api.post('/enrollment', {
+      studentId: selectedStudent.value.studentId,
+      courseId: enrollCourseId.value
+    })
+    const res = await api.get('/enrollment/student', {
+      params: { studentId: selectedStudent.value.studentId }
+    })
+    enrollments.value = res.data
+    enrollCourseId.value = null
+  } catch (err) {
+    console.error('Failed to enroll', err)
+  }
+}
+
+const updateGrade = async (enr) => {
+  try {
+    await api.patch(`/enrollment/${enr.id}/grade`, null, {
+      params: { grade: enr.grade }
+    })
+  } catch (err) {
+    console.error('Failed to update grade', err)
   }
 }
 

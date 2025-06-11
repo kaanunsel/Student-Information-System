@@ -11,6 +11,15 @@
           {{ course.courseId }} - {{ course.name }} ({{ course.code }})
         </li>
       </ul>
+      <div class="add-form">
+        <h3>Add Course</h3>
+        <input v-model="newCourse.name" placeholder="Name" />
+        <input v-model="newCourse.code" placeholder="Code" />
+        <input type="number" v-model.number="newCourse.credit" placeholder="Credit" />
+        <input type="number" v-model.number="newCourse.instructorId" placeholder="Instructor ID" />
+        <input v-model="newCourse.instructorName" placeholder="Instructor Name" />
+        <button @click="addCourse">Add</button>
+      </div>
     </div>
     <div class="detail" v-if="selectedCourse">
       <h3>Students in {{ selectedCourse.name }}</h3>
@@ -47,6 +56,13 @@ const api = axios.create({
 const courses = ref([])
 const selectedCourse = ref(null)
 const enrollments = ref([])
+const newCourse = ref({
+  name: '',
+  code: '',
+  credit: null,
+  instructorId: null,
+  instructorName: ''
+})
 
 const selectCourse = async (course) => {
   selectedCourse.value = course
@@ -58,6 +74,23 @@ const selectCourse = async (course) => {
     enrollments.value = res.data
   } catch (err) {
     console.error('Failed to fetch course enrollments', err)
+  }
+}
+
+const addCourse = async () => {
+  try {
+    await api.post('/course', newCourse.value)
+    const res = await api.get('/course')
+    courses.value = res.data
+    newCourse.value = {
+      name: '',
+      code: '',
+      credit: null,
+      instructorId: null,
+      instructorName: ''
+    }
+  } catch (err) {
+    console.error('Failed to add course', err)
   }
 }
 
