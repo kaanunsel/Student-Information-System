@@ -83,6 +83,7 @@ public class EnrollmentService {
         Enrollment enrollment = enrollmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Enrollment not found"));
         enrollment.setGrade(grade);
+        enrollmentRepository.save(enrollment);
         return EnrollmentMapper.toDTO(enrollment);
     }
 
