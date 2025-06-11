@@ -45,6 +45,7 @@ public class Instructor {
      * One instructor can teach multiple courses.
      */
     @OneToMany(mappedBy = "instructor")
+    @JsonIgnore
     private List<Course> courses;
 
     /**
@@ -52,6 +53,7 @@ public class Instructor {
      * One instructor can advise multiple students.
      */
     @OneToMany(mappedBy = "advisor")
+    @JsonIgnore
     private List<Student> advisedStudents;
 
     // --- Constructors ---
