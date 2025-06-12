@@ -5,12 +5,10 @@ import org.pangea.sis.dto.EnrollmentMapper;
 import org.pangea.sis.entity.Enrollment;
 import org.pangea.sis.repository.EnrollmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service class for managing enrollment operations between students and courses.

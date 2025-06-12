@@ -1,7 +1,6 @@
 package org.pangea.sis.repository;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.pangea.sis.entity.Course;
 import org.pangea.sis.entity.Instructor;

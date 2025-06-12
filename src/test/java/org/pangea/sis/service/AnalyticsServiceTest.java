@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.pangea.sis.dto.CoursePerformanceDTO;
-import org.pangea.sis.entity.Enrollment;
 import org.pangea.sis.repository.EnrollmentRepository;
 
 import java.util.List;

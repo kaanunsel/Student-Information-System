@@ -2,7 +2,6 @@ package org.pangea.sis.service;
 
 import org.pangea.sis.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.pangea.sis.entity.Student;
 import org.springframework.stereotype.Service;
 

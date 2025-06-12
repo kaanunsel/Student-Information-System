@@ -9,13 +9,11 @@ import org.pangea.sis.entity.Student;
 import org.pangea.sis.service.CourseService;
 import org.pangea.sis.service.EnrollmentService;
 import org.pangea.sis.service.StudentService;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * REST controller for managing student-course enrollment operations.

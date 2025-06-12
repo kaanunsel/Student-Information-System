@@ -1,10 +1,8 @@
 package org.pangea.sis.service;
 
 import org.pangea.sis.entity.Course;
-import org.pangea.sis.entity.Instructor;
 import org.pangea.sis.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
