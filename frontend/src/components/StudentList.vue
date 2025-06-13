@@ -29,6 +29,7 @@
                 </tr>
             </tbody>
         </table>
+        <AddStudent @student-added="refreshStudents"></AddStudent>
         <div v-if="editingStudent">
             <h3>Edit Student</h3>
             <form @submit.prevent="submitEdit">
@@ -46,6 +47,7 @@
 
 <script setup>
 import { ref, onMounted} from "vue"
+import AddStudent from "./AddStudent.vue"
 
 const students = ref([])
 const editingStudent = ref(null)

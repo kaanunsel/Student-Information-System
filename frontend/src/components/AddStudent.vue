@@ -69,7 +69,7 @@ const addStudent = async () => {
       alert('Failed to add student.')
     }
   } catch (error) {
-    console.error('Error adding student:', error)
+    
     alert('Error adding student.')
   }
 }

@@ -1,21 +1,19 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import StudentList from './components/StudentList.vue';
+import StudentList from './components/StudentList.vue'
 import AddStudent from './components/AddStudent.vue'
+import CourseList from './components/CourseList.vue'
 import { ref } from 'vue'
 
-const studentListRef = ref(null)
-
-const refreshStudentList = () => {
-  studentListRef.value.refreshStudents()
-}
 </script>
 
 <template>
   <div>
     <h1>Student Information System</h1>
-    <StudentList ref="studentListRef" />
-    <AddStudent @student-added="refreshStudentList" />
+    <nav>
+        <router-link to="/students">Student List</router-link>  |
+        <router-link to="/courses">Course List</router-link>
+    </nav>
+    <router-view></router-view>
   </div>
 </template>
 

@@ -26,7 +26,6 @@ public class CourseDTO {
     private Long instructorId;
 
     /** Name of the instructor. Used for display or matching. Cannot be blank. */
-    @NotBlank(message = "Instructor name is required")
     private String instructorName;
 
     // --- Constructors ---
@@ -67,11 +66,11 @@ public class CourseDTO {
         this.credit = credit;
     }
 
-    public @NotNull(message = "Instructor name is required") String getInstructorName() {
+    public String getInstructorName() {
         return instructorName;
     }
 
-    public void setInstructorName(@NotNull(message = "Instructor name is required") String instructorName) {
+    public void setInstructorName (String instructorName) {
         this.instructorName = instructorName;
     }
 

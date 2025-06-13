@@ -95,13 +95,15 @@ public class CourseController {
     }
 
     /**
-     * Deletes a course by its ID.
+     * Deletes a course by its code.
      *
-     * @param id course ID
+     * @param code course code
      * @return confirmation message
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCourse(@PathVariable Long id){
+    @DeleteMapping("/{code}")
+    public ResponseEntity<String> deleteCourse(@PathVariable String code){
+        Optional<Course> course = courseService.getCoursesByCode(code).stream().findFirst();
+        Long id = course.get().getId();
         courseService.deleteCourseById(id);
         return new ResponseEntity<>("Course is deleted", HttpStatus.OK);
     }
