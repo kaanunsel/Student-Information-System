@@ -1,5 +1,6 @@
 package org.pangea.sis.service;
 
+import org.pangea.sis.entity.Instructor;
 import org.pangea.sis.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.pangea.sis.entity.Student;
@@ -102,7 +103,7 @@ public class StudentService {
             existingStudent.setSurname(updatedStudent.getSurname());
             existingStudent.setEmail(updatedStudent.getEmail());
             existingStudent.setBirthDate(updatedStudent.getBirthDate());
-
+            existingStudent.setAdvisor(updatedStudent.getAdvisor());
             Student savedStudent = studentRepository.save(existingStudent);
             return Optional.of(savedStudent);
         } else {

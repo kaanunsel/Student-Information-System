@@ -1,12 +1,21 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import StudentList from './components/StudentList.vue';
+import AddStudent from './components/AddStudent.vue'
+import { ref } from 'vue'
+
+const studentListRef = ref(null)
+
+const refreshStudentList = () => {
+  studentListRef.value.refreshStudents()
+}
 </script>
 
 <template>
   <div>
     <h1>Student Information System</h1>
-    <StudentList />
+    <StudentList ref="studentListRef" />
+    <AddStudent @student-added="refreshStudentList" />
   </div>
 </template>
 

@@ -14,7 +14,6 @@ import java.time.LocalDate;
 public class StudentDTO {
 
     /** Unique identifier of the student (used in updates and retrieval). */
-    @NotNull(message = "ID is required")
     private Long studentId;
 
     /** First name of the student. Cannot be blank. */
