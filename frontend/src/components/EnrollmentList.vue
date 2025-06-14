@@ -24,23 +24,24 @@
     <div class="enrollment-form">
       <h2>Add New Enrollment</h2>
       <form @submit.prevent="addEnrollment">
-        <div class="form-group">
           <input 
             v-model="newEnrollment.studentId" 
             placeholder="Student ID" 
             type="number"
             required
           />
-        </div>
-        <div class="form-group">
           <input 
             v-model="newEnrollment.courseId" 
             placeholder="Course ID" 
             type="number"
             required
           />
-        </div>
-        <button type="submit" class="btn btn-primary">Enroll Student</button>
+          <input 
+            v-model="newEnrollment.grade" 
+            placeholder="Grade" 
+            type="number"
+          />
+        <button type="submit">Enroll Student</button>
       </form>
     </div>
 
@@ -71,19 +72,12 @@
                 v-model="enrollment.grade" 
                 min="0" 
                 max="100"
-                @change="updateGrade(enrollment)"
-                :disabled="!enrollment.id"
-              >
+                @change="updateGrade(enrollment)">
             </td>
             <td>{{ enrollment.enrolledAt }}</td>
             <td>
               <button 
-                @click="deleteEnrollment(enrollment.id)" 
-                class="btn btn-danger"
-                :disabled="!enrollment.id"
-              >
-                Remove
-              </button>
+                @click="deleteEnrollment(enrollment.id)"> Remove </button>
             </td>
           </tr>
         </tbody>
@@ -106,8 +100,56 @@ const filters = ref({
 
 const newEnrollment = ref({
   studentId: '',
-  courseId: ''
+  courseId: '',
+  grade: null
 })
+
+async function addEnrollment(){
+  try {
+    const response = await axios.post("http://localhost:8080/enrollment", newEnrollment.value)
+    if (response.status === 201) {
+      await fetchEnrollments()
+      newEnrollment.value = { studentId: '', courseId: '' }
+      alert('Student enrolled successfully!')
+    } else {
+      alert('Failed to enroll student')
+    }
+  } catch (error) {
+    console.error('Error enrolling student:', error)
+    alert('Failed to enroll student')
+  }
+}
+
+async function deleteEnrollment(enrollmentId) {
+  if (!confirm("ARE YOU SURE????")) return;
+  try {
+    const response = await axios.delete(`http://localhost:8080/enrollment/${enrollmentId}`)
+    if (response.status === 200) {
+      await fetchEnrollments()
+      alert('Enrollment deleted successfully!')
+    } else {
+      alert('Failed to delete enrollment')
+    }
+  } catch (e) {
+    console.error('Error deleting enrollment:', e)
+    alert('Error deleting enrollment')
+  }
+}
+
+async function updateGrade(enrollment){
+  try{
+    const response = await axios.patch(`http://localhost:8080/enrollment/${enrollment.id}/grade?grade=${enrollment.grade}`)
+    if (response.status === 200) {
+      await fetchEnrollments()
+      alert('Grade updated successfully!')
+    } else {
+      alert('Failed to update grade')
+    }
+  } catch (e) {
+    console.error('Error updating grade:', e)
+    alert('Error updating grade')
+  }
+  }
 
 function applyFilter(){
   fetchEnrollments()
