@@ -37,6 +37,10 @@ public class EnrollmentService {
         return enrollmentRepository.findAll();
     }
 
+    public List<Enrollment> getAllEnrollmentsByStudentAndCourseId(Long studentId, Long courseId){
+        return enrollmentRepository.findByStudentIdAndCourseId(studentId, courseId).stream().toList();
+    }
+
     /**
      * Retrieves all enrollments associated with a given student ID.
      *

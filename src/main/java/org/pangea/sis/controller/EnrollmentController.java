@@ -41,30 +41,19 @@ public class EnrollmentController {
      * @return list of EnrollmentDTOs
      */
     @GetMapping
-    public List<EnrollmentDTO> getAllEnrollments(){
-        return enrollmentService.getAllEnrollments().stream().map(EnrollmentMapper::toDTO).toList();
-    }
-
-    /**
-     * Retrieves enrollments for a specific student.
-     *
-     * @param studentId ID of the student
-     * @return list of the student's enrollments
-     */
-    @GetMapping("/student")
-    public List<EnrollmentDTO> getByStudentId(@RequestParam Long studentId){
-        return enrollmentService.getByStudentId(studentId).stream().map(EnrollmentMapper::toDTO).toList();
-    }
-
-    /**
-     * Retrieves enrollments for a specific course.
-     *
-     * @param courseId ID of the student
-     * @return list of the course's enrollments
-     */
-    @GetMapping("/course")
-    public List<EnrollmentDTO> getByCourseId(@RequestParam Long courseId){
-        return enrollmentService.getByCourseId(courseId).stream().map(EnrollmentMapper::toDTO).toList();
+    public List<EnrollmentDTO> getAllEnrollments(
+            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) Long courseId
+    ){
+        if(studentId != null && courseId != null){
+            return enrollmentService.getAllEnrollmentsByStudentAndCourseId(studentId,courseId).stream().map(EnrollmentMapper::toDTO).toList();
+        }else if(studentId != null){
+            return enrollmentService.getByStudentId(studentId).stream().map(EnrollmentMapper::toDTO).toList();
+        }else if(courseId != null){
+            return enrollmentService.getByCourseId(courseId).stream().map(EnrollmentMapper::toDTO).toList();
+        }else{
+            return enrollmentService.getAllEnrollments().stream().map(EnrollmentMapper::toDTO).toList();
+        }
     }
 
     /**
