@@ -33,11 +33,26 @@
         <div v-if="editingStudent">
             <h3>Edit Student</h3>
             <form @submit.prevent="submitEdit">
-                <input v-model="editingStudent.name" placeholder="Name" required/>
-                <input v-model="editingStudent.surname" placeholder="Surname" required />
-                <input v-model="editingStudent.email" placeholder="Email" required />
-                <input v-model="editingStudent.birthDate" type="date" required />
-                <input v-model="editingStudent.advisorId" type="number" placeholder="Advisor ID" required />
+                <div>
+                    <label for="name">Name:</label>
+                    <input id="name" v-model="editingStudent.name" placeholder="Name" required/>
+                </div>
+                <div>
+                    <label for="surname">Surname:</label>
+                    <input id="surname" v-model="editingStudent.surname" placeholder="Surname" required />
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input id="email" v-model="editingStudent.email" placeholder="Email" required />
+                </div>
+                <div>
+                    <label for="birthDate">Birth Date:</label>
+                    <input id="birthDate" v-model="editingStudent.birthDate" type="date" required />
+                </div>
+                <div>
+                    <label for="advisorId">Advisor ID:</label>
+                    <input id="advisorId" v-model="editingStudent.advisorId" type="number" placeholder="Advisor ID" required />
+                </div>
                 <button type="submit">Save</button>
                 <button type="button" @click="cancelEdit">Cancel</button>
             </form>

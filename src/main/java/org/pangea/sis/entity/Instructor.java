@@ -1,5 +1,6 @@
 package org.pangea.sis.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -43,6 +44,7 @@ public class Instructor {
      * List of courses taught by this instructor.
      * One instructor can teach multiple courses.
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "instructor")
     private List<Course> courses;
 
@@ -50,6 +52,7 @@ public class Instructor {
      * List of students advised by this instructor.
      * One instructor can advise multiple students.
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "advisor")
     private List<Student> advisedStudents;
 

@@ -29,13 +29,30 @@
         <div v-if="editingCourse">
             <h3>Edit Course</h3>
             <form @submit.prevent="submitEdit">
-                <input v-model="editingCourse.name" placeholder="Name" required/>
-                <input v-model="editingCourse.code" placeholder="Code" required />
-                <input v-model="editingCourse.credit" type="number" placeholder="Credit" required />
-                <input v-model="editingCourse.instructorId" type="number" placeholder="Instructor ID" />
-                <input v-model="editingCourse.instructorName" placeholder="Instructor Name" required />
-                <button type="submit">Save</button>
-                <button type="button" @click="cancelEdit">Cancel</button>
+                <div>
+                    <label for="name">Name:</label>
+                    <input id="name" v-model="editingCourse.name" placeholder="Name" required/>
+                </div>
+                <div>
+                    <label for="code">Code:</label>
+                    <input id="code" v-model="editingCourse.code" placeholder="Code" required />
+                </div>
+                <div>
+                    <label for="credit">Credit:</label>
+                    <input id="credit" v-model="editingCourse.credit" type="number" placeholder="Credit" required />
+                </div>
+                <div>
+                    <label for="insId">Instructor ID:</label>
+                    <input id="insId" v-model="editingCourse.instructorId" type="number" placeholder="Instructor ID" />
+                </div>
+                <div>
+                    <label for="insName">Instructor Name:</label>
+                    <input id="insName" v-model="editingCourse.instructorName" placeholder="Instructor Name" required />
+                </div>
+                <div>
+                    <button type="submit">Save</button>
+                    <button type="button" @click="cancelEdit">Cancel</button>
+                </div>
             </form>
         </div>
     </div>
