@@ -52,6 +52,9 @@ public class StudentController {
         if (id != null) {
             return studentService.getStudentById(id).stream().map(StudentMapper::toDto).toList();
         }
+        else if (name != null && surname != null) {
+            return studentService.getStudentsByNameAndSurname(name, surname).stream().map(StudentMapper::toDto).toList();
+        }
         else if (name != null) {
             return studentService.getStudentsByName(name).stream().map(StudentMapper::toDto).toList();
         }

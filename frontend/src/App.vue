@@ -1,17 +1,10 @@
-<script setup>
-import StudentList from './components/StudentList.vue'
-import AddStudent from './components/AddStudent.vue'
-import CourseList from './components/CourseList.vue'
-import { ref } from 'vue'
-
-</script>
-
 <template>
   <div>
     <h1>Student Information System</h1>
     <nav>
-        <router-link to="/students">Student List</router-link>  |
-        <router-link to="/courses">Course List</router-link>
+        <router-link to="/students">Students</router-link>  |
+        <router-link to="/courses">Courses</router-link>  |
+        <router-link to="/instructors">Instructors</router-link>
     </nav>
     <router-view></router-view>
   </div>

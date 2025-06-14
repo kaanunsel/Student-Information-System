@@ -1,6 +1,13 @@
 <template>
     <div>
         <h2>Course List</h2>
+        <form @submit.prevent="applyFilter">
+            <input v-model="filters.id" placeholder="ID" type="number" />
+            <input v-model="filters.code" placeholder="Code" />
+            <input v-model="filters.instructorId" placeholder="Instructor ID" type="number" />
+            <button type="submit">Filter</button>
+            <button type="button" @click="resetFilter">Cancel</button>
+        </form>
         <table border="1">
             <thead>
                 <tr>
@@ -59,15 +66,23 @@
 </template>
 
 <script setup>
-
 import { ref, onMounted } from "vue"
 import AddCourse from "./AddCourse.vue"
 
 const courses = ref([])
 const editingCourse = ref(null)
+const filters = ref({
+    id: null,
+    code: '',
+    instructorId: null
+})
 
 const refreshCourses = async () => {
-    const res = await fetch('http://localhost:8080/course')
+    const queryParams = new URLSearchParams()
+    if (filters.value.id) queryParams.append('id', filters.value.id)
+    if (filters.value.code) queryParams.append('code', filters.value.code)
+    if (filters.value.instructorId) queryParams.append('instructorId', filters.value.instructorId)
+    const res = await fetch(`http://localhost:8080/course?${queryParams.toString()}`)
     courses.value = await res.json()
 }
 
@@ -113,6 +128,15 @@ async function deleteCourse(code) {
   } catch (e) {
     alert('Error deleting course.')
   }
+}
+
+function applyFilter() {
+    refreshCourses()
+}
+
+function resetFilter() {
+    filters.value = { id: null, code: '', instructorId: null }
+    refreshCourses()
 }
 
 onMounted(refreshCourses)

@@ -7,6 +7,7 @@ import org.pangea.sis.entity.Student;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ public class StudentService {
      * @return list of matching students
      */
     public List<Student> getStudentsByName(String name){
-        return studentRepository.findAllByName(name).stream().toList();
+        return studentRepository.findAllByNameContainingIgnoreCase(name).stream().toList();
     }
 
     /**
@@ -64,7 +65,11 @@ public class StudentService {
      * @return list of matching students
      */
     public List<Student> getStudentsBySurname(String surname){
-        return studentRepository.findAllBySurname(surname).stream().toList();
+        return studentRepository.findAllBySurnameContainingIgnoreCase(surname).stream().toList();
+    }
+
+    public List<Student> getStudentsByNameAndSurname(String name, String surname) {
+        return studentRepository.findAllByNameContainingIgnoreCaseAndSurnameContainingIgnoreCase(name, surname);
     }
 
     /**

@@ -114,13 +114,13 @@ public class StudentServiceTest {
         Student s1 = new Student();
         s1.setName("Gizem");
 
-        when(studentRepository.findAllByName("Gizem")).thenReturn(List.of(s1));
+        when(studentRepository.findAllByNameContainingIgnoreCase("Gizem")).thenReturn(List.of(s1));
 
         List<Student> result = underTest.getStudentsByName("Gizem");
 
         assertEquals(1, result.size());
         assertEquals("Gizem", result.getFirst().getName());
-        verify(studentRepository).findAllByName("Gizem");
+        verify(studentRepository).findAllByNameContainingIgnoreCase("Gizem");
     }
 
     /**
@@ -131,13 +131,13 @@ public class StudentServiceTest {
         Student s1 = new Student();
         s1.setSurname("Şenel");
 
-        when(studentRepository.findAllBySurname("Şenel")).thenReturn(List.of(s1));
+        when(studentRepository.findAllBySurnameContainingIgnoreCase("Şenel")).thenReturn(List.of(s1));
 
         List<Student> result = underTest.getStudentsBySurname("Şenel");
 
         assertEquals(1, result.size());
         assertEquals("Şenel", result.getFirst().getSurname());
-        verify(studentRepository).findAllBySurname("Şenel");
+        verify(studentRepository).findAllBySurnameContainingIgnoreCase("Şenel");
     }
 
     /**

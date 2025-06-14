@@ -20,7 +20,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      * @param name student's first name
      * @return list of matching students
      */
-    List<Student> findAllByName(String name);
+    List<Student> findAllByNameContainingIgnoreCase(String name);
 
     /**
      * Finds all students with the given surname.
@@ -28,7 +28,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      * @param surname student's last name
      * @return list of matching students
      */
-    List<Student> findAllBySurname(String surname);
+    List<Student> findAllBySurnameContainingIgnoreCase(String surname);
+
+    List<Student> findAllByNameContainingIgnoreCaseAndSurnameContainingIgnoreCase(String name, String surname);
 
     /**
      * Finds a student by their email address.

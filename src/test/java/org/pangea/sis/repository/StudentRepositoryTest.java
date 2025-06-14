@@ -55,7 +55,7 @@ class StudentRepositoryTest {
         underTest.save(student3);
 
         // when
-        List<Student> expected = underTest.findAllByName("Mehmet");
+        List<Student> expected = underTest.findAllByNameContainingIgnoreCase("Mehmet");
 
         // then
         assertEquals("Mehmet", expected.getFirst().getName());

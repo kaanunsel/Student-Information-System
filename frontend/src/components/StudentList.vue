@@ -1,6 +1,13 @@
 <template>
     <div>
         <h2>Student List</h2>
+        <form @submit.prevent="applyFilter">
+        <input v-model="filters.id" placeholder="ID" type="number" />
+        <input v-model="filters.name" placeholder="Name" />
+        <input v-model="filters.surname" placeholder="Surname" />
+        <button type="submit">Apply Filter</button>
+        <button type="button" @click="resetFilter">Reset Filter</button>
+        </form>
         <table border="1">
             <thead>
                 <tr>
@@ -66,10 +73,28 @@ import AddStudent from "./AddStudent.vue"
 
 const students = ref([])
 const editingStudent = ref(null)
+const filters = ref({
+    id: null,
+    name: "",
+    surname: ""
+})
 
 const refreshStudents = async () => {
-    const res = await fetch('http://localhost:8080/student')
+    const queryParams = new URLSearchParams()
+    if (filters.value.id) queryParams.append("id", filters.value.id)
+    if (filters.value.name) queryParams.append('name', filters.value.name)
+    if (filters.value.surname) queryParams.append('surname', filters.value.surname)
+    const res = await fetch(`http://localhost:8080/student?${queryParams.toString()}`)
     students.value = await res.json()
+}
+
+function applyFilter(){
+    refreshStudents()
+}
+
+function resetFilter(){
+    filters.value = { id: null, name: '', surname: '' }
+    refreshStudents()
 }
 
 function startEdit(student) {
