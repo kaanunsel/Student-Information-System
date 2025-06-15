@@ -37,6 +37,13 @@ public class EnrollmentService {
         return enrollmentRepository.findAll();
     }
 
+    /**
+     * Retrieves all enrollments for a specific student and course.
+     *
+     * @param studentId The ID of the student.
+     * @param courseId  The ID of the course.
+     * @return A list of enrollments matching the student and course.
+     */
     public List<Enrollment> getAllEnrollmentsByStudentAndCourseId(Long studentId, Long courseId){
         return enrollmentRepository.findByStudentIdAndCourseId(studentId, courseId).stream().toList();
     }
@@ -67,8 +74,14 @@ public class EnrollmentService {
      *
      * @param enrollment enrollment entity to save
      * @return saved enrollment
+     * @throws IllegalStateException if the student is already enrolled in the course
      */
     public Enrollment createEnrollment(Enrollment enrollment){
+        if (enrollmentRepository.existsByStudentIdAndCourseId(
+                enrollment.getStudent().getId(),
+                enrollment.getCourse().getId())) {
+            throw new IllegalStateException("Student is already enrolled in this course.");
+        }
         enrollment.setEnrolledAt(LocalDateTime.now());
         return enrollmentRepository.save(enrollment);
     }

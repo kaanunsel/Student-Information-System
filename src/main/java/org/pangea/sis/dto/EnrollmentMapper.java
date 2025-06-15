@@ -2,6 +2,7 @@ package org.pangea.sis.dto;
 
 import org.pangea.sis.entity.Course;
 import org.pangea.sis.entity.Enrollment;
+import org.pangea.sis.entity.Instructor;
 import org.pangea.sis.entity.Student;
 
 /**
@@ -21,6 +22,7 @@ public class EnrollmentMapper {
 
         Student student = enrollment.getStudent();
         Course course = enrollment.getCourse();
+        Instructor instructor = course != null ? course.getInstructor() : null;
 
         return new EnrollmentDTO(
                 enrollment.getId(),
@@ -29,6 +31,9 @@ public class EnrollmentMapper {
                 student != null ? student.getSurname() : null,
                 course != null ? course.getId() : null,
                 course != null ? course.getName() : null,
+                instructor != null ? instructor.getId() : null,
+                instructor != null ? instructor.getName() : null,
+                instructor != null ? instructor.getSurname() : null,
                 enrollment.getGrade(),
                 enrollment.getEnrolledAt()
         );

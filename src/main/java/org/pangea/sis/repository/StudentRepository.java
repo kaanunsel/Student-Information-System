@@ -30,6 +30,13 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      */
     List<Student> findAllBySurnameContainingIgnoreCase(String surname);
 
+    /**
+     * Finds all students matching both a name and a surname, case-insensitively.
+     *
+     * @param name    The first name or part of it to search for.
+     * @param surname The last name or part of it to search for.
+     * @return A list of students matching both criteria.
+     */
     List<Student> findAllByNameContainingIgnoreCaseAndSurnameContainingIgnoreCase(String name, String surname);
 
     /**

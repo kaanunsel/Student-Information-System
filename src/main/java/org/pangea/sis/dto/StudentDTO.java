@@ -44,6 +44,14 @@ public class StudentDTO {
 
     public StudentDTO() {}
 
+    /**
+     * Constructs a new StudentDTO for creating a student without an advisor.
+     *
+     * @param name The first name of the student.
+     * @param surname The last name of the student.
+     * @param email The email address of the student.
+     * @param birthDate The date of birth of the student.
+     */
     public StudentDTO(String name, String surname, String email, LocalDate birthDate) {
         this.name = name;
         this.surname = surname;
@@ -51,6 +59,17 @@ public class StudentDTO {
         this.birthDate = birthDate;
     }
 
+    /**
+     * Constructs a new StudentDTO with all field values, including the advisor.
+     *
+     * @param studentId The unique identifier of the student.
+     * @param name The first name of the student.
+     * @param surname The last name of the student.
+     * @param email The email address of the student.
+     * @param birthDate The date of birth of the student.
+     * @param advisorId The ID of the assigned advisor.
+     * @param advisorName The name of the assigned advisor.
+     */
     public StudentDTO(Long studentId, String name, String surname, String email, LocalDate birthDate, Long advisorId, String advisorName) {
         this.studentId = studentId;
         this.name = name;

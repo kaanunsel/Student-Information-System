@@ -1,66 +1,93 @@
-# SIS – Student Information System
+# Student Information System (SIS)
 
-This is a basic Student Information System project developed using Spring Boot, Vue.js, and PostgreSQL. It enables managing students, courses, enrollments, and grades in a structured and scalable way.
+This is a full-stack web application built to manage students, courses, and enrollments at a university.
 
-## Project Description
+This system is allowing administrators to easily track student progress, manage course offerings, and get insights into academic performance.
 
-SIS allows users to:
-- Track which courses a student is enrolled in
-- Record and update the grades they receive
-- List students enrolled in a specific course
-- Add, update, and delete students and courses
-- Assign or change grades for student-course pairs
-- View performance analytics for each course
+## Features
 
-Note: This application does not include authentication. All operations are performed via entity IDs.
+#### Student Management
+- **Add, Update & Delete Students**: Easily manage the student roster.
+- **Filter Students**: Quickly find students by ID, name, or surname.
+- **Assign Advisors**: Link students to an instructor for academic advising.
 
-## Core Features
+#### Course Management
+- **Add, Update & Delete Courses**: Keep the course catalog current.
+- **Filter Courses**: Search for courses by ID, name, or code.
+- **Assign Instructors**: Assign a lead instructor to each course.
 
-### Student Management
-- Add, update, and delete students
-- Assign an advisor (instructor) to each student
-- Retrieve all students or filter by ID, name, or surname
+#### Enrollment Management
+- **Enroll Students**: Enroll a student into a course.
+- **Update Grades**: Record or change a student's grade for a course.
+- **Remove Enrollments**: Unenroll a student from a course.
+- **View Enrollments**: See all enrollments or filter by student.
 
-### Course Management
-- Add, update, and delete courses
-- Assign an instructor to each course
-- Retrieve all courses or filter by ID, name, or code
+#### Analytics & Reporting
+- **Course Performance**: View a summary for each course, including:
+  - Average, minimum, and maximum grades.
+  - Total number of enrolled students.
 
-### Enrollment Management
-- Enroll a student into a course
-- Remove a student from a course
-- Enter or update grades for a course
-- View all enrollments or filter by student ID
+## Technologies Used
 
-### Analytics & Reporting
-- Get average, minimum, and maximum grades for each course
-- See total number of students per course
-- Generate course performance summaries
+#### Backend
+- **Spring Boot**: For building a REST API.
+- **Spring Data JPA**: For object-relational mapping and database interaction.
+- **PostgreSQL**: The relational database for storing all data.
+- **Maven**: For project dependency management.
 
-## Tech Stack
+#### Frontend
+- **Vue.js**: A progressive JavaScript framework for building the user interface.
+- **Vite**: A fast and modern frontend build tool.
+- **Axios**: For making HTTP requests from the frontend to the backend API.
 
-- Spring Boot – Backend (Java)
-- REST API – Communication Layer
-- PostgreSQL – Relational Database
-- JUnit – Unit Testing Framework
-- Vue.js – Frontend (SPA)
+## Getting Started
 
-## Example Endpoints
+To get the application running on your local machine, follow these steps.
 
-- `GET /student?id=1` – View student’s course and grade info
-- `GET /course?id=2` – View course details
-- `GET /enrollment/student?studentId=1` – View a student's enrollments
-- `POST /student` – Add a new student
-- `DELETE /course/2` – Delete a course
-- `PATCH /enrollment/5/grade?grade=90` – Update a student’s grade
+#### Prerequisites
+- **Java 17** or higher
+- **Maven 3.8** or higher
+- **Node.js 18** or higher
+- A running **PostgreSQL** instance
 
-## Setup Instructions
+#### 1. Configure the Database
+1. Make sure your PostgreSQL server is running.
+2. Create a database named `universitydb`.
+3. Open `src/main/resources/application.properties` and update the `spring.datasource.username` and `spring.datasource.password` fields with your PostgreSQL credentials.
 
-1. Make sure PostgreSQL is installed and running.
-2. Clone this repository.
-3. Update database credentials in `application.properties`.
-4. Run the backend with:
+#### 2. Run the Backend
+Open a terminal and navigate to the project's root directory. Run the following Maven command:
+```bash
+mvn spring-boot:run
+```
+The backend server will start on `http://localhost:8080`.
 
-## Developer
+#### 3. Run the Frontend
+1. Open a new terminal.
+2. Navigate to the `frontend` directory: `cd frontend`.
+3. Install the necessary packages: `pnpm install`.
+4. Start the development server: `pnpm dev`.
 
-This project was developed by **Kaan Unsel** as part of a summer internship preparation assignment.
+The frontend application will be available at `http://localhost:5173`.
+
+## API Endpoints
+
+The backend provides a RESTful API to interact with the data. Here are the main endpoints:
+
+| Method | Endpoint                    | Description                                  |
+|--------|-----------------------------|----------------------------------------------|
+| `GET`    | `/student`                  | Get a list of students (with filters)        |
+| `POST`   | `/student`                  | Add a new student                            |
+| `PUT`    | `/student/{id}`             | Update an existing student                   |
+| `DELETE` | `/student/{id}`             | Delete a student                             |
+| `GET`    | `/course`                   | Get a list of courses (with filters)         |
+| `POST`   | `/course`                   | Add a new course                             |
+| `PUT`    | `/course/{code}`            | Update a course by its code                  |
+| `DELETE` | `/course/{code}`            | Delete a course by its code                  |
+| `GET`    | `/enrollment`               | Get a list of enrollments (with filters)     |
+| `POST`   | `/enrollment`               | Create a new enrollment                      |
+| `DELETE` | `/enrollment/{id}`          | Delete an enrollment                         |
+| `PATCH`  | `/enrollment/{id}/grade`    | Update the grade for an enrollment           |
+| `GET`    | `/analytics/performance`    | Get course performance statistics            |
+
+Thank you.

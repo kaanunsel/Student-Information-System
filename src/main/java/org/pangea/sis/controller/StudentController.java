@@ -27,6 +27,9 @@ public class StudentController {
 
     /**
      * Constructor for injecting student and instructor services.
+     *
+     * @param studentService    Service for student-related operations.
+     * @param instructorService Service for instructor-related operations.
      */
     @Autowired
     public StudentController(StudentService studentService, InstructorService instructorService){

@@ -18,6 +18,7 @@ public class CourseMapper {
      */
     public static Course toEntity(CourseDTO dto, Instructor instructor){
         Course entity = new Course();
+        entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setCode(dto.getCode());
         entity.setCredit(dto.getCredit());
@@ -33,6 +34,7 @@ public class CourseMapper {
      */
     public static CourseDTO toDto(Course course){
         return new CourseDTO(
+                course.getId(),
                 course.getName(),
                 course.getCode(),
                 course.getCredit(),

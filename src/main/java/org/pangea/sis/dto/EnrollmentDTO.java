@@ -31,6 +31,15 @@ public class EnrollmentDTO {
     /** Name of the course (optional for display). */
     private String courseName;
 
+    /** ID of the instructor for the course. */
+    private Long instructorId;
+
+    /** First name of the instructor (optional for display). */
+    private String instructorName;
+
+    /** Last name of the instructor (optional for display). */
+    private String instructorSurname;
+
     /** Grade assigned for the course. Must be 0 or greater. */
     @Min(value = 0, message = "Grade must be 0 or greater")
     private Integer grade;
@@ -43,13 +52,31 @@ public class EnrollmentDTO {
     public EnrollmentDTO() {
     }
 
-    public EnrollmentDTO(Long id, Long studentId, String studentName, String studentSurname, Long courseId, String courseName, Integer grade, LocalDateTime enrolledAt) {
+    /**
+     * Constructs a new EnrollmentDTO with all field values.
+     *
+     * @param id The unique identifier of the enrollment.
+     * @param studentId The ID of the enrolled student.
+     * @param studentName The first name of the student.
+     * @param studentSurname The last name of the student.
+     * @param courseId The ID of the course.
+     * @param courseName The name of the course.
+     * @param instructorId The ID of the course's instructor.
+     * @param instructorName The first name of the instructor.
+     * @param instructorSurname The last name of the instructor.
+     * @param grade The grade received.
+     * @param enrolledAt The timestamp of the enrollment.
+     */
+    public EnrollmentDTO(Long id, Long studentId, String studentName, String studentSurname, Long courseId, String courseName, Long instructorId, String instructorName, String instructorSurname, Integer grade, LocalDateTime enrolledAt) {
         this.id = id;
         this.studentId = studentId;
         this.studentName = studentName;
         this.studentSurname = studentSurname;
         this.courseId = courseId;
         this.courseName = courseName;
+        this.instructorId = instructorId;
+        this.instructorName = instructorName;
+        this.instructorSurname = instructorSurname;
         this.grade = grade;
         this.enrolledAt = enrolledAt;
     }
@@ -102,6 +129,30 @@ public class EnrollmentDTO {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public Long getInstructorId() {
+        return instructorId;
+    }
+
+    public void setInstructorId(Long instructorId) {
+        this.instructorId = instructorId;
+    }
+
+    public String getInstructorName() {
+        return instructorName;
+    }
+
+    public void setInstructorName(String instructorName) {
+        this.instructorName = instructorName;
+    }
+
+    public String getInstructorSurname() {
+        return instructorSurname;
+    }
+
+    public void setInstructorSurname(String instructorSurname) {
+        this.instructorSurname = instructorSurname;
     }
 
     public @Min(value = 0, message = "Grade must be 0 or greater") Integer getGrade() {

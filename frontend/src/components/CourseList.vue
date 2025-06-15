@@ -3,6 +3,7 @@
         <h2>Course List</h2>
         <form @submit.prevent="applyFilter">
             <input v-model="filters.id" placeholder="ID" type="number" />
+            <input v-model="filters.name" placeholder="Name" />
             <input v-model="filters.code" placeholder="Code" />
             <input v-model="filters.instructorId" placeholder="Instructor ID" type="number" />
             <button type="submit">Filter</button>
@@ -11,6 +12,7 @@
         <table border="1">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Code</th>
                     <th>Credit</th>
@@ -21,7 +23,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="course in courses" :key="course.courseId">
+                <tr v-for="course in courses" :key="course.id">
+                    <td>{{ course.id }}</td>
                     <td>{{ course.name }}</td>
                     <td>{{ course.code }}</td>
                     <td>{{ course.credit }}</td>
@@ -50,11 +53,7 @@
                 </div>
                 <div>
                     <label for="insId">Instructor ID:</label>
-                    <input id="insId" v-model="editingCourse.instructorId" type="number" placeholder="Instructor ID" />
-                </div>
-                <div>
-                    <label for="insName">Instructor Name:</label>
-                    <input id="insName" v-model="editingCourse.instructorName" placeholder="Instructor Name" required />
+                    <input id="insId" v-model="editingCourse.instructorId" type="number" placeholder="Instructor ID" required/>
                 </div>
                 <div>
                     <button type="submit">Save</button>
@@ -69,31 +68,53 @@
 import { ref, onMounted } from "vue"
 import AddCourse from "./AddCourse.vue"
 
+// --- Reactive State ---
+
+// Holds the list of courses fetched from the backend.
 const courses = ref([])
+// Holds the course object currently being edited, or null if not in edit mode.
 const editingCourse = ref(null)
+// Holds the current filter values for querying the course list.
 const filters = ref({
     id: null,
+    name: '',
     code: '',
     instructorId: null
 })
 
+// --- Core Logic ---
+
+/**
+ * Fetches the list of courses from the backend, applying any active filters.
+ */
 const refreshCourses = async () => {
     const queryParams = new URLSearchParams()
     if (filters.value.id) queryParams.append('id', filters.value.id)
+    if (filters.value.name) queryParams.append('name', filters.value.name)
     if (filters.value.code) queryParams.append('code', filters.value.code)
     if (filters.value.instructorId) queryParams.append('instructorId', filters.value.instructorId)
     const res = await fetch(`http://localhost:8080/course?${queryParams.toString()}`)
     courses.value = await res.json()
 }
 
+/**
+ * Initiates the editing process for a course.
+ * @param {object} course The course object to be edited.
+ */
 function startEdit(course){
     editingCourse.value = {...course}
 }
 
+/**
+ * Cancels the editing process and clears the editing state.
+ */
 function cancelEdit(){
     editingCourse.value = null
 }
 
+/**
+ * Submits the updated course data to the backend.
+ */
 async function submitEdit(){
     try {
         const res = await fetch(`http://localhost:8080/course/${editingCourse.value.code}`, {
@@ -109,10 +130,15 @@ async function submitEdit(){
             alert("Failed to update course.")
         }
     } catch (e) {
+        console.error("Error updating course:", e)
         alert("Error updating course.")
     }
 }
 
+/**
+ * Deletes a course after confirming with the user.
+ * @param {string} code The code of the course to be deleted.
+ */
 async function deleteCourse(code) {
   if (!confirm('Are you sure you want to delete this course?')) return
   try {
@@ -126,20 +152,33 @@ async function deleteCourse(code) {
       alert('Failed to delete course.')
     }
   } catch (e) {
+    console.error("Error deleting course:", e)
     alert('Error deleting course.')
   }
 }
 
+// --- Filter Handling ---
+
+/**
+ * Applies the current filters by re-fetching the course list.
+ */
 function applyFilter() {
     refreshCourses()
 }
 
+/**
+ * Resets all filters to their default state and re-fetches the course list.
+ */
 function resetFilter() {
-    filters.value = { id: null, code: '', instructorId: null }
+    filters.value = { id: null, name: '', code: '', instructorId: null }
     refreshCourses()
 }
 
+// --- Lifecycle Hooks ---
+
+// Fetches the initial list of courses when the component is mounted.
 onMounted(refreshCourses)
 
+// Exposes the refreshCourses function to be called from parent components.
 defineExpose({ refreshCourses })
 </script>

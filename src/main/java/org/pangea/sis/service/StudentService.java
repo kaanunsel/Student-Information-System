@@ -68,6 +68,13 @@ public class StudentService {
         return studentRepository.findAllBySurnameContainingIgnoreCase(surname).stream().toList();
     }
 
+    /**
+     * Retrieves students by matching both name and surname.
+     *
+     * @param name The first name to search for.
+     * @param surname The last name to search for.
+     * @return A list of students matching both criteria.
+     */
     public List<Student> getStudentsByNameAndSurname(String name, String surname) {
         return studentRepository.findAllByNameContainingIgnoreCaseAndSurnameContainingIgnoreCase(name, surname);
     }

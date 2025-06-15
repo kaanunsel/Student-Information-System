@@ -42,6 +42,15 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     Optional<Enrollment> findByStudentIdAndCourseId(Long studentId, Long courseId);
 
     /**
+     * Checks if an enrollment exists for a given student and course.
+     *
+     * @param studentId ID of the student
+     * @param courseId  ID of the course
+     * @return true if an enrollment exists, false otherwise
+     */
+    boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
+
+    /**
      * Finds all enrollments where a grade is assigned.
      *
      * @return list of graded enrollments

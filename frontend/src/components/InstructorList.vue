@@ -46,25 +46,43 @@
 </template>
 
 <script setup>
-
 import { ref, onMounted } from "vue"
 
+// --- Reactive State ---
+
+// Holds the list of instructors fetched from the backend.
 const instructors = ref([])
+// Holds the instructor object currently being edited, or null if not in edit mode.
 const editingInstructor = ref(null)
 
+// --- Core Logic ---
+
+/**
+ * Fetches the list of instructors from the backend.
+ */
 const refreshInstructors = async () => {
     const res = await fetch("http://localhost:8080/instructor")
     instructors.value = await res.json()
 }
 
+/**
+ * Initiates the editing process for an instructor.
+ * @param {object} instructor The instructor object to be edited.
+ */
 function startEdit(instructor){
     editingInstructor.value = {...instructor}
 }
 
+/**
+ * Cancels the editing process and clears the editing state.
+ */
 function cancelEdit(){
     editingInstructor.value = null
 }
 
+/**
+ * Submits the updated instructor data to the backend.
+ */
 async function submitEdit(){
     try {
     const res = await fetch(`http://localhost:8080/instructor/${editingInstructor.value.id}`, {
@@ -80,10 +98,15 @@ async function submitEdit(){
       alert('Failed to update instructor.')
     }
   } catch (e) {
+    console.error('Error updating instructor:', e)
     alert('Error updating instructor.')
   }
 }
 
+/**
+ * Deletes an instructor after confirming with the user.
+ * @param {number} id The ID of the instructor to be deleted.
+ */
 async function deleteInstructor(id) {
   if (!confirm('Are you sure you want to delete this instructor?')) return
   try {
@@ -97,9 +120,13 @@ async function deleteInstructor(id) {
       alert('Failed to delete instructor.')
     }
   } catch (e) {
+    console.error('Error deleting instructor:', e)
     alert('Error deleting instructor.')
   }
 }
 
+// --- Lifecycle Hooks ---
+
+// Fetches the initial list of instructors when the component is mounted.
 onMounted(refreshInstructors)
 </script>

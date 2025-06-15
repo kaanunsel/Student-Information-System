@@ -30,6 +30,16 @@ public class CoursePerformanceDTO {
 
     // --- Constructor ---
 
+    /**
+     * Constructs a new CoursePerformanceDTO with all field values.
+     *
+     * @param courseId The ID of the course.
+     * @param courseName The name of the course.
+     * @param avgGrade The average grade for the course.
+     * @param numberOfStudents The total number of students enrolled.
+     * @param minGrade The minimum grade achieved in the course.
+     * @param maxGrade The maximum grade achieved in the course.
+     */
     public CoursePerformanceDTO(Long courseId, String courseName, Double avgGrade, Long numberOfStudents, Integer minGrade, Integer maxGrade) {
         this.courseId = courseId;
         this.courseName = courseName;

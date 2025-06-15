@@ -28,11 +28,9 @@
 </template>
 
 <script setup>
-// Import Vue's ref function to create a reactive variable for the new student.
 import { ref } from 'vue'
 
-// Create a reactive object 'newStudent' to hold the form data.
-// This object will automatically update the form fields when changed.
+// Defines a reactive object to hold the data for the new student.
 const newStudent = ref({
   name: '',
   surname: '',
@@ -41,11 +39,15 @@ const newStudent = ref({
   advisorId: null
 })
 
-// Function to handle form submission.
-// @submit.prevent prevents the default form submission and calls addStudent instead.
+// Defines a custom event emitter to notify parent components.
+const emit = defineEmits(['student-added'])
+
+/**
+ * Asynchronously adds a new student by sending a POST request to the backend.
+ * Resets the form on success and emits an event to refresh the student list.
+ */
 const addStudent = async () => {
   try {
-    // Send a POST request to the backend API with the new student data.
     const res = await fetch('http://localhost:8080/student', {
       method: 'POST',
       headers: {
@@ -54,7 +56,6 @@ const addStudent = async () => {
       body: JSON.stringify(newStudent.value)
     })
     if (res.ok) {
-      // If successful, reset the form.
       newStudent.value = {
         name: '',
         surname: '',
@@ -63,17 +64,13 @@ const addStudent = async () => {
         advisorId: null
       }
       alert('Student added successfully!')
-      // Emit an event to notify the parent component to refresh the student list.
       emit('student-added')
     } else {
       alert('Failed to add student.')
     }
   } catch (error) {
-    
+    console.error('Error adding student:', error)
     alert('Error adding student.')
   }
 }
-
-// Define the emit function to send events to the parent component.
-const emit = defineEmits(['student-added'])
 </script> 

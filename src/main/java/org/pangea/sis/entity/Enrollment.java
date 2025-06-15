@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
  * Includes the grade and enrollment date.
  */
 @Entity
-@Table(name = "student_course")
+@Table(name = "student_course", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"student_id", "course_id"})
+})
 public class Enrollment {
 
     /** Unique identifier of the enrollment record. */

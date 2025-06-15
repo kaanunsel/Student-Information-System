@@ -97,6 +97,15 @@ public class CourseService {
     }
 
     /**
+     * Deletes a course by its code.
+     *
+     * @param code course code to delete
+     */
+    public void deleteCourseByCode(String code) {
+        courseRepository.deleteByCode(code);
+    }
+
+    /**
      * Updates an existing course by its code.
      *
      * @param code code of the course to update

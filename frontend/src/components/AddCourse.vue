@@ -26,6 +26,7 @@
 <script setup>
 import { ref } from "vue"
 
+// Defines a reactive object to hold the data for the new course.
 const newCourse = ref({
     name: "",
     code: "",
@@ -33,6 +34,13 @@ const newCourse = ref({
     instructorId: null
 })
 
+// Defines a custom event emitter to notify parent components.
+const emit = defineEmits(["course-added"])
+
+/**
+ * Asynchronously adds a new course by sending a POST request to the backend.
+ * Resets the form on success and emits an event to refresh the course list.
+ */
 async function addCourse(){
     try{
         const res = await fetch('http://localhost:8080/course', {
@@ -59,6 +67,4 @@ async function addCourse(){
         alert("Error adding course.")
     } 
 }
-
-const emit = defineEmits(["course-added"])
 </script>

@@ -71,14 +71,24 @@
 import { ref, onMounted} from "vue"
 import AddStudent from "./AddStudent.vue"
 
+// --- Reactive State ---
+
+// Holds the list of students fetched from the backend.
 const students = ref([])
+// Holds the student object currently being edited, or null if not in edit mode.
 const editingStudent = ref(null)
+// Holds the current filter values for querying the student list.
 const filters = ref({
     id: null,
     name: "",
     surname: ""
 })
 
+// --- Core Logic ---
+
+/**
+ * Fetches the list of students from the backend, applying any active filters.
+ */
 const refreshStudents = async () => {
     const queryParams = new URLSearchParams()
     if (filters.value.id) queryParams.append("id", filters.value.id)
@@ -88,23 +98,24 @@ const refreshStudents = async () => {
     students.value = await res.json()
 }
 
-function applyFilter(){
-    refreshStudents()
-}
-
-function resetFilter(){
-    filters.value = { id: null, name: '', surname: '' }
-    refreshStudents()
-}
-
+/**
+ * Initiates the editing process for a student.
+ * @param {object} student The student object to be edited.
+ */
 function startEdit(student) {
   editingStudent.value = { ...student }
 }
 
+/**
+ * Cancels the editing process and clears the editing state.
+ */
 function cancelEdit() {
     editingStudent.value = null
 }
 
+/**
+ * Submits the updated student data to the backend.
+ */
 async function submitEdit() {
     try {
         const res = await fetch(`http://localhost:8080/student/${editingStudent.value.studentId}`, {
@@ -120,12 +131,17 @@ async function submitEdit() {
             alert("Failed to update student.")
         }
     } catch (e) {
+        console.error("Error updating student:", e)
         alert("Error updating student.")
     }
 }
 
+/**
+ * Deletes a student after confirming with the user.
+ * @param {number} studentId The ID of the student to be deleted.
+ */
 async function deleteStudent(studentId) {
-    if (!confirm("ARE YOU SURE????")) return;
+    if (!confirm("Are you sure you want to delete this student?")) return;
     try {
         const res = await fetch(`http://localhost:8080/student/${studentId}`, {
         method: 'DELETE'
@@ -137,12 +153,33 @@ async function deleteStudent(studentId) {
             alert('Failed to delete student.')
         }
     }catch (e) {
+        console.error("Error deleting student:", e)
         alert('Error deleting student.')
     }
 }
 
+// --- Filter Handling ---
+
+/**
+ * Applies the current filters by re-fetching the student list.
+ */
+function applyFilter(){
+    refreshStudents()
+}
+
+/**
+ * Resets all filters to their default state and re-fetches the student list.
+ */
+function resetFilter(){
+    filters.value = { id: null, name: '', surname: '' }
+    refreshStudents()
+}
+
+// --- Lifecycle Hooks ---
+
+// Fetches the initial list of students when the component is mounted.
 onMounted(refreshStudents)
 
-// Expose the refreshStudents function to the parent via ref
+// Exposes the refreshStudents function to be called from parent components.
 defineExpose({ refreshStudents })
 </script>

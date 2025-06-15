@@ -28,6 +28,10 @@ public class EnrollmentController {
 
     /**
      * Constructor for injecting dependencies.
+     *
+     * @param enrollmentService Service for enrollment-related operations.
+     * @param studentService    Service for student-related operations.
+     * @param courseService     Service for course-related operations.
      */
     public EnrollmentController(EnrollmentService enrollmentService, StudentService studentService, CourseService courseService){
         this.enrollmentService = enrollmentService;
@@ -36,9 +40,11 @@ public class EnrollmentController {
     }
 
     /**
-     * Retrieves all enrollments in the system.
+     * Retrieves all enrollments in the system, with optional filtering by student or course.
      *
-     * @return list of EnrollmentDTOs
+     * @param studentId Optional ID of the student to filter by.
+     * @param courseId  Optional ID of the course to filter by.
+     * @return A list of matching {@link EnrollmentDTO} objects.
      */
     @GetMapping
     public List<EnrollmentDTO> getAllEnrollments(

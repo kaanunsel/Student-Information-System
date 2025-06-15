@@ -35,14 +35,32 @@ public class InstructorService {
         return instructorRepository.findById(id);
     }
 
+    /**
+     * Retrieves all instructors from the database.
+     *
+     * @return A list of all instructors.
+     */
     public List<Instructor> getAllInstructors(){
         return instructorRepository.findAll();
     }
 
+    /**
+     * Adds a new instructor to the database.
+     *
+     * @param instructor The instructor entity to add.
+     * @return The saved instructor entity.
+     */
     public Instructor addInstructor(Instructor instructor){
         return instructorRepository.save(instructor);
     }
 
+    /**
+     * Updates an existing instructor's information.
+     *
+     * @param id The ID of the instructor to update.
+     * @param instructor The instructor entity with updated information.
+     * @return An Optional containing the updated instructor, or empty if not found.
+     */
     public Optional<Instructor> updateInstructor(Long id, Instructor instructor) {
         return instructorRepository.findById(id)
                 .map(existingInstructor -> {
@@ -54,6 +72,11 @@ public class InstructorService {
                 });
     }
     
+    /**
+     * Deletes an instructor from the database.
+     *
+     * @param id The ID of the instructor to delete.
+     */
     public void deleteInstructor(Long id) {
         instructorRepository.deleteById(id);
     }

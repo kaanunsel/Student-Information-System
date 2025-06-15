@@ -27,6 +27,9 @@ public class CourseController {
 
     /**
      * Constructor for injecting CourseService and InstructorService.
+     *
+     * @param courseService Service for course-related operations.
+     * @param instructorService Service for instructor-related operations.
      */
     @Autowired
     public CourseController(CourseService courseService, InstructorService instructorService){
@@ -40,6 +43,7 @@ public class CourseController {
      *
      * @param id   optional course ID
      * @param instructorId optional instructor ID
+     * @param name optional course name
      * @param code optional course code
      * @return list of matching CourseDTOs
      */
@@ -47,7 +51,8 @@ public class CourseController {
     public List<CourseDTO> getCourses(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String code,
-            @RequestParam(required = false) Long instructorId
+            @RequestParam(required = false) Long instructorId,
+            @RequestParam(required = false) String name
     ){
         if(id != null){
             return courseService.getCourseById(id).stream().map(CourseMapper::toDto).toList();
@@ -57,6 +62,9 @@ public class CourseController {
         }
         else if (instructorId != null){
             return courseService.getCoursesByInstructorId(instructorId).stream().map(CourseMapper::toDto).toList();
+        }
+        else if (name != null){
+            return courseService.getCoursesByName(name).stream().map(CourseMapper::toDto).toList();
         }
         else {
             return courseService.getAllCourses().stream().map(CourseMapper::toDto).toList();
@@ -102,9 +110,7 @@ public class CourseController {
      */
     @DeleteMapping("/{code}")
     public ResponseEntity<String> deleteCourse(@PathVariable String code){
-        Optional<Course> course = courseService.getCoursesByCode(code).stream().findFirst();
-        Long id = course.get().getId();
-        courseService.deleteCourseById(id);
+        courseService.deleteCourseByCode(code);
         return new ResponseEntity<>("Course is deleted", HttpStatus.OK);
     }
 
