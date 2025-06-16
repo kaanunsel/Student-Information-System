@@ -1,9 +1,15 @@
 package org.pangea.sis.service;
 
+import org.pangea.sis.entity.Course;
 import org.pangea.sis.entity.Instructor;
+import org.pangea.sis.entity.Student;
+import org.pangea.sis.repository.CourseRepository;
 import org.pangea.sis.repository.InstructorRepository;
+import org.pangea.sis.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,15 +20,21 @@ import java.util.Optional;
 public class InstructorService {
 
     private final InstructorRepository instructorRepository;
+    private final CourseRepository courseRepository;
+    private final StudentRepository studentRepository;
 
     /**
      * Constructor-based injection for InstructorRepository.
      *
      * @param instructorRepository repository for accessing instructor data
+     * @param courseRepository
+     * @param studentRepository
      */
     @Autowired
-    public InstructorService(InstructorRepository instructorRepository){
+    public InstructorService(InstructorRepository instructorRepository, CourseRepository courseRepository, StudentRepository studentRepository){
         this.instructorRepository = instructorRepository;
+        this.courseRepository = courseRepository;
+        this.studentRepository = studentRepository;
     }
 
     /**
@@ -70,6 +82,25 @@ public class InstructorService {
                     existingInstructor.setPassword(instructor.getPassword());
                     return instructorRepository.save(existingInstructor);
                 });
+    }
+    
+    @Transactional
+    public void deleteInstructorById(Long id) {
+        Instructor instructor = instructorRepository.findById(id).orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        List<Course> courses = instructor.getCourses();
+        for (Course course : courses) {
+            course.setInstructor(null);
+        }
+        courseRepository.saveAll(courses);
+
+        List<Student> students = instructor.getAdvisedStudents();
+        for (Student student : students) {
+            student.setAdvisor(null);
+        }
+        studentRepository.saveAll(students);
+
+        instructorRepository.deleteById(id);
     }
     
     /**

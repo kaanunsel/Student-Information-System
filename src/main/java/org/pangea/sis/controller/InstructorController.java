@@ -1,5 +1,6 @@
 package org.pangea.sis.controller;
 
+import org.pangea.sis.repository.InstructorRepository;
 import org.pangea.sis.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.pangea.sis.entity.Instructor;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing instructor-related operations.
@@ -15,6 +17,7 @@ import java.util.List;
 @RequestMapping("/instructor")
 public class InstructorController {
     private final InstructorService instructorService;
+    private final InstructorRepository instructorRepository;
 
     /**
      * Constructor for injecting the InstructorService.
@@ -22,8 +25,9 @@ public class InstructorController {
      * @param instructorService Service for instructor-related business logic.
      */
     @Autowired
-    public InstructorController(InstructorService instructorService){
+    public InstructorController(InstructorService instructorService, InstructorRepository instructorRepository){
         this.instructorService = instructorService;
+        this.instructorRepository = instructorRepository;
     }
 
     /**
@@ -70,7 +74,12 @@ public class InstructorController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteInstructor(@PathVariable Long id) {
-        instructorService.deleteInstructor(id);
+        Optional<Instructor> instructor = instructorService.getInstructorById(id);
+        if(instructor.isPresent()) {
+            instructorService.deleteInstructorById(id);
+        }else {
+            return new ResponseEntity<>("No such instructor", HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>("Instructor deleted.", HttpStatus.OK);
     }
 }

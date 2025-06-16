@@ -44,14 +44,16 @@ public class StudentMapper {
      * @return StudentDTO containing all necessary fields including advisor info
      */
     public static StudentDTO toDto(Student student){
+        Long advisorId = student.getAdvisor() != null ? student.getAdvisor().getId() : null;
+        String advisorName = student.getAdvisor() != null ? student.getAdvisor().getName() : null;
         return new StudentDTO(
                 student.getId(),
                 student.getName(),
                 student.getSurname(),
                 student.getEmail(),
                 student.getBirthDate(),
-                student.getAdvisor().getId(),
-                student.getAdvisor().getName()
+                advisorId,
+                advisorName
         );
     }
 }
