@@ -59,5 +59,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
      *
      * @param code the code of the course to delete
      */
-    void deleteByCode(String code);
+    void deleteAllByCode(String code);
+
+
 }

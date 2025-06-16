@@ -102,7 +102,7 @@ public class CourseService {
      * @param code course code to delete
      */
     public void deleteCourseByCode(String code) {
-        courseRepository.deleteByCode(code);
+        courseRepository.deleteAllByCode(code);
     }
 
     /**
@@ -120,6 +120,7 @@ public class CourseService {
             existingCourse.setName(updatedCourse.getName());
             existingCourse.setCode(updatedCourse.getCode());
             existingCourse.setCredit(updatedCourse.getCredit());
+            existingCourse.setInstructor(updatedCourse.getInstructor());
             Course saved = courseRepository.save(existingCourse);
             return Optional.of(saved);
         } else {
