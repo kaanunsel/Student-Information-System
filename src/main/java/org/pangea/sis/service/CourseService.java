@@ -102,7 +102,8 @@ public class CourseService {
      * @param code course code to delete
      */
     public void deleteCourseByCode(String code) {
-        courseRepository.deleteAllByCode(code);
+        Optional<Course> courseToDelete = courseRepository.findByCode(code);
+        courseToDelete.ifPresent(courseRepository::delete);
     }
 
     /**

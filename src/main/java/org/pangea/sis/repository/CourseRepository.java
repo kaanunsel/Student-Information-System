@@ -54,12 +54,4 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
      */
     List<Course> findAllByInstructorId(Long id);
 
-    /**
-     * Deletes a course by its code.
-     *
-     * @param code the code of the course to delete
-     */
-    void deleteAllByCode(String code);
-
-
 }
