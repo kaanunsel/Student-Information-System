@@ -101,23 +101,41 @@ public class StudentService {
      * Updates an existing student's information.
      *
      * @param id ID of the student to update
-     * @param updatedStudent object with updated data
+     * @param updatedStudent object with updated data. Only non-null fields are applied,
+     *                       allowing for partial updates without unintentionally
+     *                       clearing existing values.
      * @return updated student wrapped in Optional, or empty if not found
      */
     public Optional<Student> updateStudent(Long id, Student updatedStudent) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
 
-        if (optionalStudent.isPresent()) {
-            Student existingStudent = optionalStudent.get();
-            existingStudent.setName(updatedStudent.getName());
-            existingStudent.setSurname(updatedStudent.getSurname());
-            existingStudent.setEmail(updatedStudent.getEmail());
-            existingStudent.setBirthDate(updatedStudent.getBirthDate());
-            existingStudent.setAdvisor(updatedStudent.getAdvisor());
-            Student savedStudent = studentRepository.save(existingStudent);
-            return Optional.of(savedStudent);
-        } else {
+        if (optionalStudent.isEmpty()) {
             return Optional.empty();
         }
+
+        Student existingStudent = optionalStudent.get();
+
+        if (updatedStudent.getName() != null) {
+            existingStudent.setName(updatedStudent.getName());
+        }
+
+        if (updatedStudent.getSurname() != null) {
+            existingStudent.setSurname(updatedStudent.getSurname());
+        }
+
+        if (updatedStudent.getEmail() != null) {
+            existingStudent.setEmail(updatedStudent.getEmail());
+        }
+
+        if (updatedStudent.getBirthDate() != null) {
+            existingStudent.setBirthDate(updatedStudent.getBirthDate());
+        }
+
+        if (updatedStudent.getAdvisor() != null) {
+            existingStudent.setAdvisor(updatedStudent.getAdvisor());
+        }
+
+        Student savedStudent = studentRepository.save(existingStudent);
+        return Optional.of(savedStudent);
     }
 }
