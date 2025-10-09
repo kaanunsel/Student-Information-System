@@ -1,6 +1,5 @@
 package org.pangea.sis.controller;
 
-import org.pangea.sis.repository.InstructorRepository;
 import org.pangea.sis.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import java.util.Optional;
 @RequestMapping("/instructor")
 public class InstructorController {
     private final InstructorService instructorService;
-    private final InstructorRepository instructorRepository;
 
     /**
      * Constructor for injecting the InstructorService.
@@ -25,9 +23,8 @@ public class InstructorController {
      * @param instructorService Service for instructor-related business logic.
      */
     @Autowired
-    public InstructorController(InstructorService instructorService, InstructorRepository instructorRepository){
+    public InstructorController(InstructorService instructorService) {
         this.instructorService = instructorService;
-        this.instructorRepository = instructorRepository;
     }
 
     /**
