@@ -8,7 +8,7 @@
         <button type="submit">Apply Filter</button>
         <button type="button" @click="resetFilter">Reset Filter</button>
         </form>
-        <table border="1">
+        <table class="student-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -31,8 +31,8 @@
                     <td>{{ student.birthDate }}</td>
                     <td>{{ student.advisorId }}</td>
                     <td>{{ student.advisorName }}</td>
-                    <td><button @click="startEdit(student)">Edit</button></td>
-                    <td><button @click="deleteStudent(student.studentId)">Delete</button></td>
+                    <td><button class="edit-btn" @click="startEdit(student)">Edit</button></td>
+                    <td><button class="delete-btn" @click="deleteStudent(student.studentId)">Delete</button></td>
                 </tr>
             </tbody>
         </table>

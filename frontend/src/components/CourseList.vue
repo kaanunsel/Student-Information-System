@@ -9,7 +9,7 @@
             <button type="submit">Filter</button>
             <button type="button" @click="resetFilter">Cancel</button>
         </form>
-        <table border="1">
+        <table class="course-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -30,8 +30,8 @@
                     <td>{{ course.credit }}</td>
                     <td>{{ course.instructorId }}</td>
                     <td>{{ course.instructorName }}</td>
-                    <td><button @click="startEdit(course)">Edit</button></td>
-                    <td><button @click="deleteCourse(course.code)">Delete</button></td>
+                    <td><button class="edit-btn" @click="startEdit(course)">Edit</button></td>
+                    <td><button class="delete-btn" @click="deleteCourse(course.code)">Delete</button></td>
                 </tr>
             </tbody>
         </table>
@@ -74,6 +74,8 @@ import AddCourse from "./AddCourse.vue"
 const courses = ref([])
 // Holds the course object currently being edited, or null if not in edit mode.
 const editingCourse = ref(null)
+// Holds the original code of the course being edited, to handle code updates.
+const originalCode = ref(null)
 // Holds the current filter values for querying the course list.
 const filters = ref({
     id: null,
@@ -103,6 +105,7 @@ const refreshCourses = async () => {
  */
 function startEdit(course){
     editingCourse.value = {...course}
+    originalCode.value = course.code
 }
 
 /**
@@ -117,7 +120,7 @@ function cancelEdit(){
  */
 async function submitEdit(){
     try {
-        const res = await fetch(`http://localhost:8080/course/${editingCourse.value.code}`, {
+        const res = await fetch(`http://localhost:8080/course/${originalCode.value}`, {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(editingCourse.value)

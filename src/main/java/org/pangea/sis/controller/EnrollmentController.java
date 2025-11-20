@@ -69,9 +69,19 @@ public class EnrollmentController {
      * @return created enrollment as DTO
      */
     @PostMapping
-    public ResponseEntity<EnrollmentDTO> addEnrollment(@RequestBody @Valid EnrollmentDTO dto){
-        Student enrolledStudent = studentService.getStudentById(dto.getStudentId()).getFirst();
-        Course enrolledCourse = courseService.getCourseById(dto.getCourseId()).getFirst();
+    public ResponseEntity<?> addEnrollment(@RequestBody @Valid EnrollmentDTO dto){
+        List<Student> students = studentService.getStudentById(dto.getStudentId());
+        if (students.isEmpty()) {
+            return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
+        }
+        Student enrolledStudent = students.getFirst();
+
+        List<Course> courses = courseService.getCourseById(dto.getCourseId());
+        if (courses.isEmpty()) {
+            return new ResponseEntity<>("Course not found", HttpStatus.NOT_FOUND);
+        }
+        Course enrolledCourse = courses.getFirst();
+
         Enrollment createdEnrollment = enrollmentService.createEnrollment(
                 EnrollmentMapper.toEntity(dto, enrolledStudent, enrolledCourse)
         );

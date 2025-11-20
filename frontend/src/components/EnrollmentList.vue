@@ -48,7 +48,7 @@
     <!-- Enrollments Table -->
     <div class="enrollments-table">
       <h2>Current Enrollments</h2>
-      <table border="1">
+      <table class="enrollments-table-content">
         <thead>
           <tr>
             <th>Student ID</th>
@@ -74,11 +74,13 @@
                 v-model="enrollment.grade" 
                 min="0" 
                 max="100"
+                class="grade-input"
                 @change="updateGrade(enrollment)">
             </td>
             <td>{{ enrollment.enrolledAt }}</td>
             <td>
               <button 
+                class="delete-btn"
                 @click="deleteEnrollment(enrollment.id)"> Remove </button>
             </td>
           </tr>
