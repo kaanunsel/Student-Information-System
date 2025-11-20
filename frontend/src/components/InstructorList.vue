@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Instructor List</h2>
-        <table border="1">
+        <table class="instructor-table">
         <thead>
             <tr>
             <th>ID</th>
@@ -18,8 +18,8 @@
             <td>{{ instructor.name }}</td>
             <td>{{ instructor.surname }}</td>
             <td>{{ instructor.email }}</td>
-            <td><button @click="startEdit(instructor)">Edit</button></td>
-            <td><button @click="deleteInstructor(instructor.id)">Delete</button></td>
+            <td><button class="edit-btn" @click="startEdit(instructor)">Edit</button></td>
+            <td><button class="delete-btn" @click="deleteInstructor(instructor.id)">Delete</button></td>
             </tr>
         </tbody>
         </table>

@@ -97,7 +97,11 @@ public class StudentController {
         @PathVariable Long id,
         @RequestBody @Valid StudentDTO dto
     ) {
-        Instructor instructor = instructorService.getInstructorById(dto.getAdvisorId()).get();
+        Optional<Instructor> instructorOpt = instructorService.getInstructorById(dto.getAdvisorId());
+        if (instructorOpt.isEmpty()) {
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Instructor instructor = instructorOpt.get();
         return studentService.updateStudent(id, StudentMapper.toEntity(dto, instructor))
                 .map(updatedStudent -> new ResponseEntity<>(StudentMapper.toDto(updatedStudent), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

@@ -4,7 +4,7 @@
 
     <!-- Analytics Table -->
     <div class="analytics-table">
-      <table border="1">
+      <table class="analytics-table-content">
         <thead>
           <tr>
             <th>Course ID</th>

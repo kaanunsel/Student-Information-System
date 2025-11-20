@@ -96,7 +96,11 @@ public class CourseController {
      */
     @PutMapping("/{code}")
     public ResponseEntity<CourseDTO> updateCourse(@PathVariable String code, @RequestBody @Valid CourseDTO dto){
-        Instructor instructor = instructorService.getInstructorById(dto.getInstructorId()).get();
+        Optional<Instructor> instructorOpt = instructorService.getInstructorById(dto.getInstructorId());
+        if (instructorOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Instructor instructor = instructorOpt.get();
         return courseService.updateCourse(code, CourseMapper.toEntity(dto, instructor))
                 .map(course -> new ResponseEntity<>(CourseMapper.toDto(course), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
