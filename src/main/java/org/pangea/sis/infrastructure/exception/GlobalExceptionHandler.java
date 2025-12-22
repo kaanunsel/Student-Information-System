@@ -5,32 +5,54 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Global exception handler for handling validation errors across the application.
+ * Global exception handler for handling validation errors and other exceptions
+ * across the application.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * Handles validation errors triggered by @Valid annotated request bodies.
-     *
-     * @param ex the exception thrown during validation
-     * @return a map of field names and corresponding error messages with HTTP 400 status
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex,
+            WebRequest request) {
         Map<String, String> errors = new HashMap<>();
-
-        // Loop through all field errors and collect them in a map
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
 
-        // Return error details with 400 Bad Request status
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation Failed",
+                errors.toString(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RuntimeException.class) // Fallback for generic exceptions
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // Define a simple ErrorResponse structure
+    public record ErrorResponse(
+            LocalDateTime timestamp,
+            int status,
+            String error,
+            String message,
+            String path) {
     }
 }

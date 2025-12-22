@@ -1,34 +1,37 @@
 <template>
-  <div>
-    <h2>Add New Student</h2>
-    <form @submit.prevent="addStudent">
+  <div class="glass-panel" style="padding: 1.5rem; background: rgba(255,255,255,0.4);">
+    <h3 style="margin-top: 0; margin-bottom: 1.5rem;">Add New Student</h3>
+    <form @submit.prevent="addStudent" style="max-width: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
       <div>
-        <label for="name">Name:</label>
-        <input id="name" v-model="newStudent.name" required />
+        <label for="new-name">Name</label>
+        <input id="new-name" v-model="newStudent.name" placeholder="Name" required />
       </div>
       <div>
-        <label for="surname">Surname:</label>
-        <input id="surname" v-model="newStudent.surname" required />
+        <label for="new-surname">Surname</label>
+        <input id="new-surname" v-model="newStudent.surname" placeholder="Surname" required />
       </div>
       <div>
-        <label for="email">Email:</label>
-        <input id="email" v-model="newStudent.email" type="email" required />
+        <label for="new-email">Email</label>
+        <input id="new-email" v-model="newStudent.email" type="email" placeholder="Email" required />
       </div>
       <div>
-        <label for="birthDate">Birth Date:</label>
-        <input id="birthDate" v-model="newStudent.birthDate" type="date" required />
+        <label for="new-birthDate">Birth Date</label>
+        <input id="new-birthDate" v-model="newStudent.birthDate" type="date" required />
       </div>
       <div>
-        <label for="advisorId">Advisor ID:</label>
-        <input id="advisorId" v-model="newStudent.advisorId" type="number" required />
+        <label for="new-advisorId">Advisor ID</label>
+        <input id="new-advisorId" v-model="newStudent.advisorId" type="number" placeholder="Advisor ID" required />
       </div>
-      <button type="submit">Add Student</button>
+      <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+        <button type="submit" class="btn-primary" style="width: auto;">Add Student</button>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import api from '../services/api'
 
 // Defines a reactive object to hold the data for the new student.
 const newStudent = ref({
@@ -48,14 +51,9 @@ const emit = defineEmits(['student-added'])
  */
 const addStudent = async () => {
   try {
-    const res = await fetch('http://localhost:8080/student', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newStudent.value)
-    })
-    if (res.ok) {
+    const res = await api.createStudent(newStudent.value)
+    // Axios returns response object, check status or data
+    if (res.status === 201) {
       newStudent.value = {
         name: '',
         surname: '',
@@ -66,11 +64,11 @@ const addStudent = async () => {
       alert('Student added successfully!')
       emit('student-added')
     } else {
-      alert('Failed to add student.')
+      alert('Failed to add student. Status: ' + res.status)
     }
   } catch (error) {
     console.error('Error adding student:', error)
-    alert('Error adding student.')
+    alert('Error adding student. Please check inputs.')
   }
 }
 </script> 

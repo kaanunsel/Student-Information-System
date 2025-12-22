@@ -1,9 +1,11 @@
 <template>
-  <div class="analytics-list">
-    <h2>Course Performance Analytics</h2>
+  <div class="glass-panel" style="padding: 2rem;">
+    <div class="page-header">
+      <h2>Course Performance Analytics</h2>
+    </div>
 
     <!-- Analytics Table -->
-    <div class="analytics-table">
+    <div class="table-container">
       <table class="analytics-table-content">
         <thead>
           <tr>
@@ -32,7 +34,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import api from '../services/api'
 
 // Defines a reactive array to store the course performance statistics.
 const stats = ref([])
@@ -43,11 +45,11 @@ const stats = ref([])
  */
 const fetchStats = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/analytics/performance')
-    stats.value = response.data
+    const res = await api.getCoursePerformance()
+    stats.value = res.data
   } catch (error) {
     console.error('Error fetching analytics:', error)
-    alert('Failed to fetch analytics data.')
+    // alert('Failed to fetch analytics data.')
   }
 }
 

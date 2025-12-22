@@ -1,34 +1,43 @@
-package org.pangea.sis.domain.model;
+package org.pangea.sis.infrastructure.adapter.in.web.dto;
 
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 
-/**
- * Domain model representing an instructor in the system.
- * Pure POJO without infrastructure dependencies.
- */
-public class Instructor {
+import java.time.LocalDate;
+
+public class InstructorDTO {
+
     private Long id;
-    private String name;
-    private String surname;
-    private String email;
-    private String password;
-    private String department;
-    private java.time.LocalDate hiringDate;
-    private LocalDateTime createdAt;
 
-    public Instructor() {
+    @NotBlank(message = "Name is required")
+    private String name;
+
+    @NotBlank(message = "Surname is required")
+    private String surname;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Not a valid email")
+    private String email;
+
+    @NotBlank(message = "Department is required")
+    private String department;
+
+    @NotNull(message = "Hiring date is required")
+    @Past(message = "Hiring date must be in the past")
+    private LocalDate hiringDate;
+
+    public InstructorDTO() {
     }
 
-    public Instructor(Long id, String name, String surname, String email,
-            String password, String department, java.time.LocalDate hiringDate, LocalDateTime createdAt) {
+    public InstructorDTO(Long id, String name, String surname, String email, String department, LocalDate hiringDate) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.password = password;
         this.department = department;
         this.hiringDate = hiringDate;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -63,14 +72,6 @@ public class Instructor {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getDepartment() {
         return department;
     }
@@ -79,19 +80,11 @@ public class Instructor {
         this.department = department;
     }
 
-    public java.time.LocalDate getHiringDate() {
+    public LocalDate getHiringDate() {
         return hiringDate;
     }
 
-    public void setHiringDate(java.time.LocalDate hiringDate) {
+    public void setHiringDate(LocalDate hiringDate) {
         this.hiringDate = hiringDate;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

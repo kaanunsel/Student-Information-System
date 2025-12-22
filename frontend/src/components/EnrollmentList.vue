@@ -1,10 +1,13 @@
 <template>
-  <div class="enrollment-list">
-    <h2>Enrollment Management</h2>
+  <div class="glass-panel" style="padding: 2rem;">
+    <div class="page-header">
+      <h2>Enrollment Management</h2>
+    </div>
 
     <!-- Filter Section -->
-    <div class="filter-section">
-      <form @submit.prevent="applyFilter">
+    <div class="glass-panel" style="padding: 1.5rem; margin-bottom: 2rem; background: rgba(255,255,255,0.3)">
+      <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Filters</h3>
+      <form @submit.prevent="applyFilter" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 0; margin: 0; max-width: none;">
           <input 
             v-model="filters.studentId" 
             placeholder="Student ID" 
@@ -15,15 +18,17 @@
             placeholder="Course ID" 
             type="number"
           />
-        <button type="submit">Apply Filter</button>
-        <button type="button" @click="resetFilter">Reset Filter</button>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button type="submit" class="btn-primary">Apply Filter</button>
+          <button type="button" class="btn-secondary" @click="resetFilter">Reset</button>
+        </div>
       </form>
     </div>
 
     <!-- Enrollment Form -->
-    <div class="enrollment-form">
-      <h2>Add New Enrollment</h2>
-      <form @submit.prevent="addEnrollment">
+    <div class="glass-panel" style="padding: 1.5rem; margin-bottom: 2rem; background: rgba(255,255,255,0.4);">
+      <h3 style="margin-top: 0; margin-bottom: 1.5rem;">Add New Enrollment</h3>
+      <form @submit.prevent="addEnrollment" style="max-width: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
           <input 
             v-model="newEnrollment.studentId" 
             placeholder="Student ID" 
@@ -38,16 +43,19 @@
           />
           <input 
             v-model="newEnrollment.grade" 
-            placeholder="Grade" 
+            placeholder="Grade (Optional)" 
             type="number"
+            min="0"
+            max="100"
           />
-        <button type="submit">Enroll Student</button>
+        <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+          <button type="submit" class="btn-primary" style="width: auto;">Enroll Student</button>
+        </div>
       </form>
     </div>
 
     <!-- Enrollments Table -->
-    <div class="enrollments-table">
-      <h2>Current Enrollments</h2>
+    <div class="table-container">
       <table class="enrollments-table-content">
         <thead>
           <tr>
@@ -74,13 +82,14 @@
                 v-model="enrollment.grade" 
                 min="0" 
                 max="100"
-                class="grade-input"
+                style="width: 80px; padding: 0.4rem;"
                 @change="updateGrade(enrollment)">
             </td>
-            <td>{{ enrollment.enrolledAt }}</td>
+            <td>{{ new Date(enrollment.enrolledAt).toLocaleDateString() }}</td>
             <td>
               <button 
-                class="delete-btn"
+                class="btn-danger"
+                style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"
                 @click="deleteEnrollment(enrollment.id)"> Remove </button>
             </td>
           </tr>
@@ -92,18 +101,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import api from '../services/api'
 
 // --- Reactive State ---
-
-// Holds the list of enrollments fetched from the backend.
 const enrollments = ref([])
-// Holds the current filter values for querying the enrollment list.
 const filters = ref({
   studentId: '',
   courseId: ''
 })
-// Holds the data for a new enrollment being created.
 const newEnrollment = ref({
   studentId: '',
   courseId: '',
@@ -112,53 +117,39 @@ const newEnrollment = ref({
 
 // --- Core Logic ---
 
-/**
- * Fetches the list of enrollments from the backend, applying any active filters.
- */
 const fetchEnrollments = async () => {
-  const queryParams = new URLSearchParams()
-  if(filters.value.studentId) queryParams.append("studentId",filters.value.studentId)
-  if(filters.value.courseId) queryParams.append("courseId",filters.value.courseId)
   try {
-    const response = await axios.get(`http://localhost:8080/enrollment?${queryParams.toString()}`)
-    enrollments.value = response.data
+    const res = await api.getEnrollments(filters.value)
+    enrollments.value = res.data
   } catch (error) {
     console.error('Error fetching enrollments:', error)
-    alert('Failed to fetch enrollments')
+    // alert('Failed to fetch enrollments')
   }
 }
 
-/**
- * Adds a new enrollment record.
- */
 async function addEnrollment(){
   try {
-    const response = await axios.post("http://localhost:8080/enrollment", newEnrollment.value)
-    if (response.status === 201) {
+    const res = await api.createEnrollment(newEnrollment.value)
+    if (res.status === 201) {
       await fetchEnrollments()
       newEnrollment.value = { studentId: '', courseId: '', grade: null }
       alert('Student enrolled successfully!')
     } else {
-      const errorData = await response.json();
-      alert(`Failed to enroll student: ${errorData.message || 'Unknown error'}`)
+      alert('Failed to enroll student.')
     }
   } catch (error) {
     console.error('Error enrolling student:', error)
-    alert('Failed to enroll student')
+    alert('Failed to enroll student. Check IDs.')
   }
 }
 
-/**
- * Deletes an enrollment record after user confirmation.
- * @param {number} enrollmentId The ID of the enrollment to delete.
- */
 async function deleteEnrollment(enrollmentId) {
   if (!confirm("Are you sure you want to remove this enrollment?")) return;
   try {
-    const response = await axios.delete(`http://localhost:8080/enrollment/${enrollmentId}`)
-    if (response.status === 200) {
+    const res = await api.deleteEnrollment(enrollmentId)
+    if (res.status === 200) {
       await fetchEnrollments()
-      alert('Enrollment deleted successfully!')
+      // alert('Enrollment deleted successfully!')
     } else {
       alert('Failed to delete enrollment')
     }
@@ -168,16 +159,12 @@ async function deleteEnrollment(enrollmentId) {
   }
 }
 
-/**
- * Updates the grade for a specific enrollment.
- * @param {object} enrollment The enrollment object containing the new grade.
- */
 async function updateGrade(enrollment){
   try{
-    const response = await axios.patch(`http://localhost:8080/enrollment/${enrollment.id}/grade?grade=${enrollment.grade}`)
-    if (response.status === 200) {
-      await fetchEnrollments()
-      alert('Grade updated successfully!')
+    const res = await api.updateEnrollmentGrade(enrollment.id, enrollment.grade)
+    if (res.status === 200) {
+      // await fetchEnrollments() // Optional: refresh to be sure
+      alert('Grade updated!')
     } else {
       alert('Failed to update grade')
     }
@@ -189,23 +176,15 @@ async function updateGrade(enrollment){
 
 // --- Filter Handling ---
 
-/**
- * Applies the current filters by re-fetching the enrollment list.
- */
 function applyFilter(){
   fetchEnrollments()
 }
 
-/**
- * Resets all filters to their default state and re-fetches the enrollment list.
- */
 function resetFilter(){
   filters.value = {studentId : "", courseId : ""}
   fetchEnrollments()
 }
 
 // --- Lifecycle Hooks ---
-
-// Fetches the initial list of enrollments when the component is mounted.
 onMounted(fetchEnrollments)
 </script>
