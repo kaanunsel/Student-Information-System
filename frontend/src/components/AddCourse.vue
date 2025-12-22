@@ -1,32 +1,24 @@
 <template>
-    <div>
-        <h2>Add New Course</h2>
-        <form @submit.prevent="addCourse">
-            <div>
-                <label for="name">Name:</label>
-                <input id="name" v-model="newCourse.name" required />
-            </div>
-            <div>
-                <label for="code">Code:</label>
-                <input id="code" v-model="newCourse.code" required />
-            </div>
-            <div>
-                <label for="credit">Credit:</label>
-                <input id="credit" v-model="newCourse.credit" type="number" required />
-            </div>
-            <div>
-                <label for="instructorId">Instructor ID:</label>
-                <input id="instructorId" v-model="newCourse.instructorId" type="number" required />
-            </div>
-            <button type="submit">Add Course</button>
-        </form>
-    </div>
+    <form @submit.prevent="addCourse" class="flex flex-col gap-4">
+        <BaseInput id="new-name" label="Course Name" v-model="newCourse.name" required />
+        <BaseInput id="new-code" label="Course Code" v-model="newCourse.code" required />
+        <BaseInput id="new-credit" label="Credit" v-model="newCourse.credit" type="number" required />
+        <BaseInput id="new-instructorId" label="Instructor ID" v-model="newCourse.instructorId" type="number"
+            required />
+
+        <div class="flex justify-end gap-2 mt-4">
+            <BaseButton type="button" variant="ghost" @click="$emit('cancel')">Cancel</BaseButton>
+            <BaseButton type="submit" variant="primary">Add Course</BaseButton>
+        </div>
+    </form>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref } from 'vue'
+import api from '../services/api' // Use api service
+import BaseInput from './ui/BaseInput.vue'
+import BaseButton from './ui/BaseButton.vue'
 
-// Defines a reactive object to hold the data for the new course.
 const newCourse = ref({
     name: "",
     code: "",
@@ -34,37 +26,25 @@ const newCourse = ref({
     instructorId: null
 })
 
-// Defines a custom event emitter to notify parent components.
-const emit = defineEmits(["course-added"])
+const emit = defineEmits(["course-added", "cancel"])
 
-/**
- * Asynchronously adds a new course by sending a POST request to the backend.
- * Resets the form on success and emits an event to refresh the course list.
- */
-async function addCourse(){
-    try{
-        const res = await fetch('http://localhost:8080/course', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newCourse.value)
-        })
-        if(res.ok){
+const addCourse = async () => {
+    try {
+        const res = await api.createCourse(newCourse.value)
+        if (res.status === 201 || res.status === 200) { // 201 Created or 200 OK
             newCourse.value = {
                 name: "",
                 code: "",
                 credit: null,
                 instructorId: null
             }
-            alert('Course added successfully!')
             emit('course-added')
         } else {
             alert("Failed to add course.")
         }
-    } catch(error) {
+    } catch (error) {
         console.error('Error adding course:', error)
         alert("Error adding course.")
-    } 
+    }
 }
 </script>

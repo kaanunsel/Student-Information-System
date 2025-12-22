@@ -1,107 +1,118 @@
 <template>
-    <div class="glass-panel" style="padding: 2rem;">
-        <div class="page-header">
-            <h2>Course List</h2>
+    <div class="page-container">
+        <div class="page-header flex justify-between items-center">
+            <div>
+                <h2 class="page-title">Courses</h2>
+                <p style="color: var(--text-muted); margin: 0;">Manage course offerings</p>
+            </div>
+            <BaseButton @click="showAddModal = true">
+                <template #icon-left>
+                    <PlusIcon size="18" />
+                </template>
+                Add Course
+            </BaseButton>
         </div>
 
-        <div class="glass-panel" style="padding: 1.5rem; margin-bottom: 2rem; background: rgba(255,255,255,0.3)">
-            <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Filters</h3>
-            <form @submit.prevent="applyFilter" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 0; margin: 0; max-width: none;">
-                <input v-model="filters.id" placeholder="ID" type="number" />
-                <input v-model="filters.name" placeholder="Name" />
-                <input v-model="filters.code" placeholder="Code" />
-                <input v-model="filters.instructorId" placeholder="Instructor ID" type="number" />
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <button type="submit" class="btn-primary">Apply Filter</button>
-                    <button type="button" class="btn-secondary" @click="resetFilter">Reset</button>
+        <BaseCard class="mb-8" :no-padding="false">
+            <template #header>
+                <div class="flex items-center gap-2">
+                    <FilterIcon size="18" class="text-muted" />
+                    <span class="font-medium">Filters</span>
+                </div>
+            </template>
+
+            <form @submit.prevent="applyFilter" class="filter-grid">
+                <BaseInput v-model="filters.id" placeholder="Course ID" type="number">
+                    <template #prefix>
+                        <SearchIcon size="16" class="text-muted input-icon" />
+                    </template>
+                </BaseInput>
+                <BaseInput v-model="filters.name" placeholder="Course Name" />
+                <BaseInput v-model="filters.code" placeholder="Course Code" />
+                <BaseInput v-model="filters.instructorId" placeholder="Instructor ID" type="number" />
+
+                <div class="flex gap-2 items-end pb-4">
+                    <BaseButton type="submit" variant="primary" size="sm">Apply</BaseButton>
+                    <BaseButton type="button" variant="ghost" size="sm" @click="resetFilter">Reset</BaseButton>
                 </div>
             </form>
-        </div>
+        </BaseCard>
 
-        <div class="table-container">
-            <table class="course-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Credit</th>
-                        <th>Instructor ID</th>
-                        <th>Instructor Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="course in courses" :key="course.id">
-                        <td>{{ course.id }}</td>
-                        <td>{{ course.name }}</td>
-                        <td>{{ course.code }}</td>
-                        <td>{{ course.credit }}</td>
-                        <td>{{ course.instructorId }}</td>
-                        <td>{{ course.instructorName }}</td>
-                        <td>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" @click="startEdit(course)">Edit</button>
-                                <button class="btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" @click="deleteCourse(course.code)">Delete</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <BaseCard :no-padding="true">
+            <BaseTable :headers="['ID', 'Name', 'Code', 'Credit', 'Instructor', 'Actions']">
+                <tr v-for="course in courses" :key="course.courseId">
+                    <td>#{{ course.courseId }}</td>
+                    <td class="font-medium">{{ course.courseName }}</td>
+                    <td>
+                        <span class="badge-code">{{ course.courseCode }}</span>
+                    </td>
+                    <td>{{ course.credit }}</td>
+                    <td>
+                        <span v-if="course.instructorName">{{ course.instructorName }}</span>
+                        <span v-else class="text-muted">-</span>
+                    </td>
+                    <td>
+                        <div class="flex gap-2">
+                            <BaseButton variant="secondary" size="sm" @click="startEdit(course)">
+                                <Edit2Icon size="14" />
+                            </BaseButton>
+                            <BaseButton variant="danger" size="sm" @click="deleteCourse(course.courseId)">
+                                <Trash2Icon size="14" />
+                            </BaseButton>
+                        </div>
+                    </td>
+                </tr>
+                <tr v-if="courses.length === 0">
+                    <td colspan="6" class="text-center py-8 text-muted">
+                        No courses found.
+                    </td>
+                </tr>
+            </BaseTable>
+        </BaseCard>
 
-        <div style="margin-top: 2rem;">
-            <AddCourse @course-added="refreshCourses"></AddCourse>
-        </div>
+        <!-- Add Course Modal -->
+        <BaseModal :isOpen="showAddModal" title="Add New Course" @close="showAddModal = false">
+            <AddCourseForm @course-added="onCourseAdded" @cancel="showAddModal = false" />
+        </BaseModal>
 
-        <!-- Edit Modal Overlay -->
-        <div v-if="editingCourse" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100;">
-            <div class="glass-panel" style="background: white; padding: 2rem; width: 100%; max-width: 500px;">
-                <h3 style="margin-bottom: 1.5rem;">Edit Course</h3>
-                <form @submit.prevent="submitEdit" style="display: grid; gap: 1rem; padding: 0; margin-bottom: 0;">
-                    <div>
-                        <label for="name">Name:</label>
-                        <input id="name" v-model="editingCourse.name" placeholder="Name" required/>
-                    </div>
-                    <div>
-                        <label for="code">Code:</label>
-                        <input id="code" v-model="editingCourse.code" placeholder="Code" required />
-                    </div>
-                    <div>
-                        <label for="credit">Credit:</label>
-                        <input id="credit" v-model="editingCourse.credit" type="number" placeholder="Credit" required />
-                    </div>
-                    <div>
-                        <label for="insId">Instructor ID:</label>
-                        <input id="insId" v-model="editingCourse.instructorId" type="number" placeholder="Instructor ID" required/>
-                    </div>
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                        <button type="submit" class="btn-primary" style="flex: 1;">Save Changes</button>
-                        <button type="button" class="btn-secondary" style="flex: 1;" @click="cancelEdit">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <!-- Edit Course Modal -->
+        <BaseModal :isOpen="!!editingCourse" title="Edit Course" @close="cancelEdit">
+            <form v-if="editingCourse" @submit.prevent="submitEdit" class="flex flex-col gap-4">
+                <BaseInput id="edit-courseName" label="Course Name" v-model="editingCourse.courseName" required />
+                <BaseInput id="edit-courseCode" label="Course Code" v-model="editingCourse.courseCode" required />
+                <BaseInput id="edit-credit" label="Credit" v-model="editingCourse.credit" type="number" required />
+                <BaseInput id="edit-instructorId" label="Instructor ID" v-model="editingCourse.instructorId"
+                    type="number" required />
+
+                <div class="flex justify-end gap-2 mt-4">
+                    <BaseButton type="button" variant="ghost" @click="cancelEdit">Cancel</BaseButton>
+                    <BaseButton type="submit" variant="primary">Save Changes</BaseButton>
+                </div>
+            </form>
+        </BaseModal>
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue"
-import AddCourse from "./AddCourse.vue"
 import api from "../services/api"
+import BaseButton from "./ui/BaseButton.vue"
+import BaseInput from "./ui/BaseInput.vue"
+import BaseCard from "./ui/BaseCard.vue"
+import BaseTable from "./ui/BaseTable.vue"
+import BaseModal from "./ui/BaseModal.vue"
+import AddCourseForm from "./AddCourse.vue" // Will refactor this next
+import { PlusIcon, SearchIcon, FilterIcon, Edit2Icon, Trash2Icon } from 'lucide-vue-next'
 
-// --- Reactive State ---
 const courses = ref([])
 const editingCourse = ref(null)
-const originalCode = ref(null)
+const showAddModal = ref(false)
 const filters = ref({
     id: null,
-    name: '',
-    code: '',
+    name: "",
+    code: "",
     instructorId: null
 })
-
-// --- Core Logic ---
 
 const refreshCourses = async () => {
     try {
@@ -112,41 +123,34 @@ const refreshCourses = async () => {
     }
 }
 
-function startEdit(course){
-    editingCourse.value = {...course}
-    originalCode.value = course.code
+function startEdit(course) {
+    editingCourse.value = { ...course }
 }
 
-function cancelEdit(){
+function cancelEdit() {
     editingCourse.value = null
 }
 
-async function submitEdit(){
+async function submitEdit() {
     try {
-        // API expects code as identifier for update in current structure
-        // DTO validation will happen on backend
-        await api.updateCourse(originalCode.value, editingCourse.value)
+        await api.updateCourse(editingCourse.value.courseId, editingCourse.value)
         await refreshCourses()
         editingCourse.value = null
-        // alert("Course updated succesfully!")
     } catch (e) {
         console.error("Error updating course:", e)
-        alert("Error updating course.")
+        alert('Error updating course')
     }
 }
 
-async function deleteCourse(code) {
-  if (!confirm('Are you sure you want to delete this course?')) return
-  try {
-    await api.deleteCourse(code)
-    await refreshCourses()
-  } catch (e) {
-    console.error("Error deleting course:", e)
-    alert('Error deleting course.')
-  }
+async function deleteCourse(courseId) {
+    if (!confirm('Are you sure?')) return
+    try {
+        await api.deleteCourse(courseId)
+        await refreshCourses()
+    } catch (e) {
+        console.error('Error deleting course:', e)
+    }
 }
-
-// --- Filter Handling ---
 
 function applyFilter() {
     refreshCourses()
@@ -157,7 +161,42 @@ function resetFilter() {
     refreshCourses()
 }
 
-// --- Lifecycle Hooks ---
+function onCourseAdded() {
+    showAddModal.value = false
+    refreshCourses()
+}
+
 onMounted(refreshCourses)
-defineExpose({ refreshCourses })
 </script>
+
+<style scoped>
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.input-icon {
+    margin-right: 0.5rem;
+}
+
+.badge-code {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: var(--gray-200);
+    color: var(--gray-800);
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.font-medium {
+    font-weight: 500;
+}
+</style>
